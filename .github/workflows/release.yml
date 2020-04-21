@@ -1,0 +1,57 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  build:
+    name: Provider Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest]
+    steps:
+      - name: Set up Go 1.14
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.14
+        id: go
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+        with:
+          path: src
+      - uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Build
+        run: |
+          cd src
+          go build -v .
+          GOOS=windows GOARCH=amd64 go build -v .
+      - name: Compress
+        run: |
+          cd src
+          tar zcvf terraform-provider-fincloud.osx.tar.gz terraform-provider-fincloud
+          tar zcvf terraform-provider-fincloud.windows.tar.gz terraform-provider-fincloud.exe
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            src/terraform-provider-fincloud.osx.tar.gz
+            src/terraform-provider-fincloud.windows.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
