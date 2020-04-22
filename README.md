@@ -1,5 +1,7 @@
 # Terraform Provider for Financial Cloud
 
+![Build](https://github.com/samjegal/terraform-provider-fincloud/workflows/Build/badge.svg)
+
 ## Requirements
 
 - [Terraform](https://www.terraform.io/downloads.html) 0.12.x +
