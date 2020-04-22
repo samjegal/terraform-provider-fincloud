@@ -272,8 +272,8 @@ github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6So
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/samjegal/fincloud-sdk-for-go v1.0.0 h1:zXWrVdauzS4V5W4GOyCQkJ0AJaq0v5/NEig15KaaFcM=
 github.com/samjegal/fincloud-sdk-for-go v1.0.0/go.mod h1:VoJtv+Amf04KECwJGJxoBQvEZYVh+RxWqdtRDp6IYFQ=
-github.com/samjegal/go-fincloud-helpers v0.1.0 h1:469Nls3/jwh70gHRGxhLVjHSbyTll2BufchN6/g7KGc=
-github.com/samjegal/go-fincloud-helpers v0.1.0/go.mod h1:hINsgEp09K0DXx/X3V0xz4g8fRLn9pG5q04mpzRTE4A=
+github.com/samjegal/go-fincloud-helpers v0.1.1 h1:OUwmi1ddsqN6emXAUGAgP/xvCk9eGyBXgdCPeoGBzRk=
+github.com/samjegal/go-fincloud-helpers v0.1.1/go.mod h1:hINsgEp09K0DXx/X3V0xz4g8fRLn9pG5q04mpzRTE4A=
 github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
 github.com/sergi/go-diff v1.0.0 h1:Kpca3qRNrduNnOQeazBd0ysaKrUJiIuISHxogkT9RPQ=
 github.com/sergi/go-diff v1.0.0/go.mod h1:0CfEIISq7TuYL3j771MWULgwwjU+GofnZX9QAmXWZgo=
