@@ -35,7 +35,7 @@ jobs:
         run: |
           cd src
           tar zcvf terraform-provider-fincloud.osx.tar.gz terraform-provider-fincloud
-          tar zcvf terraform-provider-fincloud.windows.tar.gz terraform-provider-fincloud.exe
+          zip terraform-provider-fincloud.windows.zip terraform-provider-fincloud.exe
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -52,6 +52,6 @@ jobs:
         with:
           files: |
             src/terraform-provider-fincloud.osx.tar.gz
-            src/terraform-provider-fincloud.windows.tar.gz
+            src/terraform-provider-fincloud.windows.zip
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
