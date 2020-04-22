@@ -1,3 +1,11 @@
+## 1.0.1 (April 22, 2020)
+
+BUG FIXES:
+
+- Fix incorrect setting of home directory path in Windows environment
+- Fixed an issue where the parameter value was empty in the initial configuration file
+- Changed the zip method of compressing binary for windows in task of github action
+
 ## 1.0.0 (April 21, 2020)
 
 NOTE:
