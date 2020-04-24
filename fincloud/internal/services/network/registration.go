@@ -22,5 +22,6 @@ func (r Registration) SupportedResources() map[string]*schema.Resource {
 		subnetResourceName:              resourceSubnet(),
 		networkAclResourceName:          resourceNetworkAcl(),
 		networkAclRuleResourceName:      resourceNetworkAclRule(),
+		netGatewayResourceName:          resourceNatGateway(),
 	}
 }

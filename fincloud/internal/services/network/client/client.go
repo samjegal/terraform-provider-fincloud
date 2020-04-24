@@ -14,6 +14,8 @@ type Client struct {
 	AclRuleClient  *network.RuleClient
 	InboundClient  *network.InboundRuleClient
 	OutboundClient *network.OutboundRuleClient
+
+	NatGatewayClient *network.NatGatewayClient
 }
 
 func NewClient(o *common.ClientOptions) *Client {
@@ -35,6 +37,9 @@ func NewClient(o *common.ClientOptions) *Client {
 	OutboundClient := network.NewOutboundRuleClientWithBaseURI(o.ResourceManagerEndpoint)
 	o.ConfigureClient(&OutboundClient.Client, o.ResourceManagerAuthorizer)
 
+	NatGatewayClient := network.NewNatGatewayClientWithBaseURI(o.ResourceManagerEndpoint)
+	o.ConfigureClient(&NatGatewayClient.Client, o.ResourceManagerAuthorizer)
+
 	return &Client{
 		VirtualPrivateCloudClient: &VirtualPrivateCloudClient,
 		SubnetClient:              &SubnetClient,
@@ -44,5 +49,7 @@ func NewClient(o *common.ClientOptions) *Client {
 		AclRuleClient:  &AclRuleClient,
 		InboundClient:  &InboundClient,
 		OutboundClient: &OutboundClient,
+
+		NatGatewayClient: &NatGatewayClient,
 	}
 }
