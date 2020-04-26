@@ -23,5 +23,6 @@ func (r Registration) SupportedResources() map[string]*schema.Resource {
 		networkAclResourceName:          resourceNetworkAcl(),
 		networkAclRuleResourceName:      resourceNetworkAclRule(),
 		netGatewayResourceName:          resourceNatGateway(),
+		routeTableResourceName:          resourceRouteTable(),
 	}
 }

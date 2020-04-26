@@ -11,9 +11,14 @@ build-docker:
 	mkdir -p bin
 	docker run --rm -v $$(pwd)/bin:/go/bin -v $$(pwd):/go/src/github.com/samjegal/terraform-provider-fincloud -w /go/src/github.com/samjegal/terraform-provider-fincloud -e GOOS golang:1.14 make build
 
-install: fmtcheck
+install: plugin
 	cp terraform-provider-fincloud /usr/local/bin
 	rm terraform-provider-fincloud
+
+# For use in The Terraform plugin
+plugin:
+	mkdir -p ~/.terraform.d/plugins/darwin_amd64
+	cp terraform-provider-fincloud ~/.terraform.d/plugins/darwin_amd64
 
 fmt:
 	@echo "==> Fixing source code with gofmt..."

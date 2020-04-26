@@ -8,6 +8,7 @@ import (
 	compute "github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/compute/client"
 	location "github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/location/client"
 	network "github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/network/client"
+	vpn "github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/vpn/client"
 )
 
 type Client struct {
@@ -17,6 +18,7 @@ type Client struct {
 	Compute  *compute.Client
 	Network  *network.Client
 	Location *location.Client
+	Vpn      *vpn.Client
 }
 
 func (client *Client) Build(ctx context.Context, o *common.ClientOptions) error {
@@ -27,6 +29,7 @@ func (client *Client) Build(ctx context.Context, o *common.ClientOptions) error 
 	client.Compute = compute.NewClient(o)
 	client.Network = network.NewClient(o)
 	client.Location = location.NewClient(o)
+	client.Vpn = vpn.NewClient(o)
 
 	return nil
 }

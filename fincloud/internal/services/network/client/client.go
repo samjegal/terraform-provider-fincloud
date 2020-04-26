@@ -16,6 +16,10 @@ type Client struct {
 	OutboundClient *network.OutboundRuleClient
 
 	NatGatewayClient *network.NatGatewayClient
+
+	// Route Table
+	RouteTableClient       *network.RouteTableClient
+	RouteTableSubnetClient *network.RouteTableSubnetClient
 }
 
 func NewClient(o *common.ClientOptions) *Client {
@@ -40,6 +44,12 @@ func NewClient(o *common.ClientOptions) *Client {
 	NatGatewayClient := network.NewNatGatewayClientWithBaseURI(o.ResourceManagerEndpoint)
 	o.ConfigureClient(&NatGatewayClient.Client, o.ResourceManagerAuthorizer)
 
+	RouteTableClient := network.NewRouteTableClientWithBaseURI(o.ResourceManagerEndpoint)
+	o.ConfigureClient(&RouteTableClient.Client, o.ResourceManagerAuthorizer)
+
+	RouteTableSubnetClient := network.NewRouteTableSubnetClientWithBaseURI(o.ResourceManagerEndpoint)
+	o.ConfigureClient(&RouteTableSubnetClient.Client, o.ResourceManagerAuthorizer)
+
 	return &Client{
 		VirtualPrivateCloudClient: &VirtualPrivateCloudClient,
 		SubnetClient:              &SubnetClient,
@@ -51,5 +61,9 @@ func NewClient(o *common.ClientOptions) *Client {
 		OutboundClient: &OutboundClient,
 
 		NatGatewayClient: &NatGatewayClient,
+
+		// Route Table
+		RouteTableClient:       &RouteTableClient,
+		RouteTableSubnetClient: &RouteTableSubnetClient,
 	}
 }
