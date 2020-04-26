@@ -180,12 +180,8 @@ github.com/hashicorp/terraform-config-inspect v0.0.0-20200413172006-36d6f40eb7d7
 github.com/hashicorp/terraform-config-inspect v0.0.0-20200413172006-36d6f40eb7d7/go.mod h1:p+ivJws3dpqbp1iP84+npOyAmTTOLMgCzrXd3GSdn/A=
 github.com/hashicorp/terraform-json v0.4.0 h1:KNh29iNxozP5adfUFBJ4/fWd0Cu3taGgjHB38JYqOF4=
 github.com/hashicorp/terraform-json v0.4.0/go.mod h1:eAbqb4w0pSlRmdvl8fOyHAi/+8jnkVYN28gJkSJrLhU=
-github.com/hashicorp/terraform-plugin-sdk v1.9.1 h1:AgHnd6yPCg7o57XWrv4L7tIMdF0KQpcZro1pDHF1Xbw=
-github.com/hashicorp/terraform-plugin-sdk v1.9.1/go.mod h1:C/AXwmDHqbc3h6URiHpIsVKrwV4PS0Sh0+VTaeEkShw=
 github.com/hashicorp/terraform-plugin-sdk v1.10.0 h1:JLV3dUnsAF8TKGUdEPkvl9H0Xb2LdcHxLJyDPZ1A5/U=
 github.com/hashicorp/terraform-plugin-sdk v1.10.0/go.mod h1:HiWIPD/T9HixIhQUwaSoDQxo4BLFdmiBi/Qz5gjB8Q0=
-github.com/hashicorp/terraform-plugin-test v1.2.0 h1:AWFdqyfnOj04sxTdaAF57QqvW7XXrT8PseUHkbKsE8I=
-github.com/hashicorp/terraform-plugin-test v1.2.0/go.mod h1:QIJHYz8j+xJtdtLrFTlzQVC0ocr3rf/OjIpgZLK56Hs=
 github.com/hashicorp/terraform-plugin-test v1.3.0 h1:hU5LoxrOn9qvOo+LTKN6mSav2J+dAMprbdxJPEQvp4U=
 github.com/hashicorp/terraform-plugin-test v1.3.0/go.mod h1:QIJHYz8j+xJtdtLrFTlzQVC0ocr3rf/OjIpgZLK56Hs=
 github.com/hashicorp/terraform-svchost v0.0.0-20191011084731-65d371908596 h1:hjyO2JsNZUKT1ym+FAdlBEkGPevazYsmVgIMw7dVELg=
@@ -274,8 +270,8 @@ github.com/prometheus/procfs v0.0.0-20190507164030-5867b95ac084/go.mod h1:TjEm7z
 github.com/prometheus/tsdb v0.7.1/go.mod h1:qhTCs0VvXwvX/y3TZrWD7rabWM+ijKTux40TwIPHuXU=
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
-github.com/samjegal/fincloud-sdk-for-go v1.1.0 h1:Zfcci3Xd0ea7+bLeC1NjE5XjWyiadQWWQqmd/B6o1oI=
-github.com/samjegal/fincloud-sdk-for-go v1.1.0/go.mod h1:VoJtv+Amf04KECwJGJxoBQvEZYVh+RxWqdtRDp6IYFQ=
+github.com/samjegal/fincloud-sdk-for-go v1.2.0 h1:U/L4bAVzVKPjs2EL2l7kbsBPUEcbz50aWwXi8qET1rg=
+github.com/samjegal/fincloud-sdk-for-go v1.2.0/go.mod h1:VoJtv+Amf04KECwJGJxoBQvEZYVh+RxWqdtRDp6IYFQ=
 github.com/samjegal/go-fincloud-helpers v0.1.1 h1:OUwmi1ddsqN6emXAUGAgP/xvCk9eGyBXgdCPeoGBzRk=
 github.com/samjegal/go-fincloud-helpers v0.1.1/go.mod h1:hINsgEp09K0DXx/X3V0xz4g8fRLn9pG5q04mpzRTE4A=
 github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
