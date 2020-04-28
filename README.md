@@ -1,6 +1,8 @@
 # Terraform Provider for Financial Cloud
 
 ![Build](https://github.com/samjegal/terraform-provider-fincloud/workflows/Build/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/samjegal/terraform-provider-fincloud)](https://goreportcard.com/report/github.com/samjegal/terraform-provider-fincloud)
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](./LICENSE)
 
 ## Requirements
 
