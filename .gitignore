@@ -27,7 +27,6 @@ website/node_modules
 website/vendor
 
 .vscode/
-vendor/
 
 # Test exclusions
 !command/test-fixtures/**/*.tfstate
