@@ -171,6 +171,10 @@ func resourceRouteTableRead(d *schema.ResourceData, meta interface{}) error {
 		d.SetId(fmt.Sprintf("%d", *props.RouteTableNo))
 	}
 
+	// 연관 서브넷 설정
+
+	// 라우트 룰 설정
+
 	return nil
 }
 

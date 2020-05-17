@@ -1,3 +1,10 @@
+## 1.1.0 ()
+
+FEATURES:
+
+- **New Resource:** `fincloud_vpn_connection`: Cannot be created or deleted
+- **New Resource:** `fincloud_route_table`
+
 ## 1.0.1 (April 22, 2020)
 
 BUG FIXES:
