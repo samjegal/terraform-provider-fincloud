@@ -1,10 +1,13 @@
 package network
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -137,12 +140,56 @@ func resourceRouteTableCreate(d *schema.ResourceData, meta interface{}) error {
 		MinTimeout: 15 * time.Second,
 	}
 	if _, err := stateConf.WaitForState(); err != nil {
-		return fmt.Errorf("서브넷의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
+		return fmt.Errorf("라우트 테이블의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
+	}
+
+	// 라우트 테이블 번호
+	routeTableId, err := routeTableId(client, name)
+	if err != nil {
+		return err
 	}
 
 	// 연관 서브넷 설정
+	if v, ok := d.GetOk("subnet"); ok {
+		// TODO: 연관 서브넷 정보를 전부 삭제
+
+		subnetList := make([]string, 0)
+		subnets := v.([]interface{})
+		for _, s := range subnets {
+			subnetList = append(subnetList, s.(string))
+		}
+
+		routeTableNumber, _ := strconv.Atoi(routeTableId)
+		resp, err = client.Network.RouteTableSubnetClient.Update(ctx, routeTableId,
+			network.RouteTableSubnetParameter{
+				VpcNo:        utils.String(d.Get("vpc_id").(string)),
+				RouteTableNo: utils.Int32(int32(routeTableNumber)),
+				SubnetNos:    &subnetList,
+			})
+		if err != nil {
+			return err
+		}
+
+		stateConf = &resource.StateChangeConf{
+			Pending:    []string{"SET"},
+			Target:     []string{"RUN"},
+			Refresh:    routeTableStateRefreshFunc(client, name, expandRouteTableSearchParameter()),
+			Timeout:    30 * time.Minute,
+			MinTimeout: 15 * time.Second,
+		}
+		if _, err := stateConf.WaitForState(); err != nil {
+			return fmt.Errorf("라우트 테이블의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
+		}
+	}
 
 	// 라우트 룰 설정
+	if v, ok := d.GetOk("route"); ok {
+		resp, err = client.Network.RouteTableClient.Update(ctx, routeTableId,
+			*expandRouteTableRuleParameter(client, v.(*schema.Set).List()))
+		if err != nil {
+			return err
+		}
+	}
 
 	return resourceRouteTableRead(d, meta)
 }
@@ -204,12 +251,40 @@ func resourceRouteTableDelete(d *schema.ResourceData, meta interface{}) error {
 		MinTimeout: 15 * time.Second,
 	}
 	if _, err := stateConf.WaitForState(); err != nil {
-		return fmt.Errorf("서브넷의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
+		return fmt.Errorf("라우트 테이블의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
 	}
 
 	d.SetId("")
 
 	return nil
+}
+
+func routeTableId(client *clients.Client, name string) (string, error) {
+	ctx := client.StopContext
+	content, err := client.Network.RouteTableClient.List(ctx, expandRouteTableSearchParameter())
+	if err != nil {
+		return "", err
+	}
+
+	var props *network.RouteTableSearchContentParameter
+	for _, v := range *content.Content {
+		if name == *v.RouteTableName {
+			props = &v
+			break
+		}
+	}
+
+	return fmt.Sprintf("%d", *props.RouteTableNo), nil
+}
+
+// TODO: 연관 서브넷 정보를 해당 함수에 정리해야 한다.
+func routeTableSubnetUpdate() {
+
+}
+
+// TODO: 라우트 룰 정보를 업데이트 하는 함수에 정리해야 한다.
+func routeTableRuleUpdate() {
+
 }
 
 func expandRouteTableParameter(d *schema.ResourceData) (*network.RouteTableParameter, error) {
@@ -269,5 +344,21 @@ func expandRouteTableSearchParameter() network.RouteTableSearchParameter {
 }
 
 func routeTableRuleHashSet(input interface{}) int {
-	return 0
+	var buf bytes.Buffer
+
+	if m, ok := input.(map[string]interface{}); ok {
+		if v, ok := m["cidr_block"]; ok {
+			buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+		}
+
+		if v, ok := m["endpoint"]; ok {
+			buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+		}
+	}
+
+	return hashcode.String(buf.String())
+}
+
+func expandRouteTableRuleParameter(client *clients.Client, d []interface{}) *network.RouteTableRuleParameter {
+	return nil
 }
