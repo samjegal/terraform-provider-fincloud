@@ -149,38 +149,12 @@ func resourceRouteTableCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
+	d.SetId(routeTableId)
+
 	// 연관 서브넷 설정
-	if v, ok := d.GetOk("subnet"); ok {
-		// TODO: 연관 서브넷 정보를 전부 삭제
+	// if v, ok := d.GetOk("subnet"); ok {
 
-		subnetList := make([]string, 0)
-		subnets := v.([]interface{})
-		for _, s := range subnets {
-			subnetList = append(subnetList, s.(string))
-		}
-
-		routeTableNumber, _ := strconv.Atoi(routeTableId)
-		resp, err = client.Network.RouteTableSubnetClient.Update(ctx, routeTableId,
-			network.RouteTableSubnetParameter{
-				VpcNo:        utils.String(d.Get("vpc_id").(string)),
-				RouteTableNo: utils.Int32(int32(routeTableNumber)),
-				SubnetNos:    &subnetList,
-			})
-		if err != nil {
-			return err
-		}
-
-		stateConf = &resource.StateChangeConf{
-			Pending:    []string{"SET"},
-			Target:     []string{"RUN"},
-			Refresh:    routeTableStateRefreshFunc(client, name, expandRouteTableSearchParameter()),
-			Timeout:    30 * time.Minute,
-			MinTimeout: 15 * time.Second,
-		}
-		if _, err := stateConf.WaitForState(); err != nil {
-			return fmt.Errorf("라우트 테이블의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
-		}
-	}
+	// }
 
 	// 라우트 룰 설정
 	if v, ok := d.GetOk("route"); ok {
@@ -278,8 +252,47 @@ func routeTableId(client *clients.Client, name string) (string, error) {
 }
 
 // TODO: 연관 서브넷 정보를 해당 함수에 정리해야 한다.
-func routeTableSubnetUpdate() {
+func routeTableSubnetUpdate(client *clients.Client, d *schema.ResourceData) error {
+	ctx := client.StopContext
 
+	id := d.Id()
+	name := d.Get("name").(string)
+
+	subnetList := make([]string, 0)
+	subnets := d.Get("subnet").([]interface{})
+	for _, s := range subnets {
+		subnetList = append(subnetList, s.(string))
+	}
+
+	routeTableNumber, _ := strconv.Atoi(id)
+	_, err := client.Network.RouteTableSubnetClient.Update(ctx, id,
+		network.RouteTableSubnetParameter{
+			VpcNo:        utils.String(d.Get("vpc_id").(string)),
+			RouteTableNo: utils.Int32(int32(routeTableNumber)),
+			SubnetNos:    &subnetList,
+		})
+	if err != nil {
+		return err
+	}
+
+	stateConf := &resource.StateChangeConf{
+		Pending:    []string{"SET"},
+		Target:     []string{"RUN"},
+		Refresh:    routeTableStateRefreshFunc(client, name, expandRouteTableSearchParameter()),
+		Timeout:    30 * time.Minute,
+		MinTimeout: 15 * time.Second,
+	}
+	if _, err := stateConf.WaitForState(); err != nil {
+		return fmt.Errorf("라우트 테이블의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
+	}
+
+	return nil
+}
+
+// TODO: 연관 서브넷 정보를 전부 삭제
+// TODO: 서브넷 삭제시 SET에서 RUN으로 상태가 완료
+func routeTableSubnetDelete(client *clients.Client, d *schema.ResourceData) error {
+	return nil
 }
 
 // TODO: 라우트 룰 정보를 업데이트 하는 함수에 정리해야 한다.
