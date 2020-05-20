@@ -63,14 +63,8 @@ func resourceRouteTable() *schema.Resource {
 			"subnet": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: validate.NoEmptyStrings,
-						},
-					},
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 
@@ -152,14 +146,17 @@ func resourceRouteTableCreate(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(routeTableId)
 
 	// 연관 서브넷 설정
-	// if v, ok := d.GetOk("subnet"); ok {
-
-	// }
+	if _, ok := d.GetOk("subnet"); ok {
+		err = routeTableSubnetUpdate(client, d)
+		if err != nil {
+			return err
+		}
+	}
 
 	// 라우트 룰 설정
-	if v, ok := d.GetOk("route"); ok {
+	if _, ok := d.GetOk("route"); ok {
 		resp, err = client.Network.RouteTableClient.Update(ctx, routeTableId,
-			*expandRouteTableRuleParameter(client, v.(*schema.Set).List()))
+			*expandRouteTableRuleParameter(client, d))
 		if err != nil {
 			return err
 		}
@@ -170,7 +167,7 @@ func resourceRouteTableCreate(d *schema.ResourceData, meta interface{}) error {
 
 func resourceRouteTableRead(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client).Network.RouteTableClient
-	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
+	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
 	name := d.Get("name").(string)
@@ -192,20 +189,32 @@ func resourceRouteTableRead(d *schema.ResourceData, meta interface{}) error {
 		d.SetId(fmt.Sprintf("%d", *props.RouteTableNo))
 	}
 
-	// 연관 서브넷 설정
-
-	// 라우트 룰 설정
-
 	return nil
 }
 
 func resourceRouteTableUpdate(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*clients.Client)
+	_, cancel := timeouts.ForUpdate(meta.(*clients.Client).StopContext, d)
+	defer cancel()
+
+	// id := d.Id()
+
+	if d.HasChange("subnet") {
+		err := routeTableSubnetUpdate(client, d)
+		if err != nil {
+			return err
+		}
+	}
+
+	// if d.HasChange("route") {
+	// }
+
 	return nil
 }
 
 func resourceRouteTableDelete(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client)
-	ctx, cancel := timeouts.ForCreate(meta.(*clients.Client).StopContext, d)
+	ctx, cancel := timeouts.ForDelete(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 	routeTableClient := client.Network.RouteTableClient
 
@@ -251,7 +260,6 @@ func routeTableId(client *clients.Client, name string) (string, error) {
 	return fmt.Sprintf("%d", *props.RouteTableNo), nil
 }
 
-// TODO: 연관 서브넷 정보를 해당 함수에 정리해야 한다.
 func routeTableSubnetUpdate(client *clients.Client, d *schema.ResourceData) error {
 	ctx := client.StopContext
 
@@ -286,12 +294,6 @@ func routeTableSubnetUpdate(client *clients.Client, d *schema.ResourceData) erro
 		return fmt.Errorf("라우트 테이블의 상태 코드를 가져오는 중 문제가 발생했다. Subnet: %q", name)
 	}
 
-	return nil
-}
-
-// TODO: 연관 서브넷 정보를 전부 삭제
-// TODO: 서브넷 삭제시 SET에서 RUN으로 상태가 완료
-func routeTableSubnetDelete(client *clients.Client, d *schema.ResourceData) error {
 	return nil
 }
 
@@ -372,6 +374,22 @@ func routeTableRuleHashSet(input interface{}) int {
 	return hashcode.String(buf.String())
 }
 
-func expandRouteTableRuleParameter(client *clients.Client, d []interface{}) *network.RouteTableRuleParameter {
-	return nil
+func expandRouteTableRuleParameter(client *clients.Client, d *schema.ResourceData) *network.RouteTableRuleParameter {
+	id, _ := strconv.Atoi(d.Id())
+	return &network.RouteTableRuleParameter{
+		VpcNo:        utils.String(d.Get("vpc_id").(string)),
+		RouteTableNo: utils.Int32(int32(id)),
+		Route:        expandRouteTableRuleContentParameter(client, d),
+	}
+}
+
+func expandRouteTableRuleContentParameter(client *clients.Client, d *schema.ResourceData) *[]network.RouteTableRuleContentParameter {
+	output := make([]network.RouteTableRuleContentParameter, 0)
+
+	routes := d.Get("route").(*schema.Set).List()
+	for _, r := range routes {
+		_ = r.(map[string]interface{})
+	}
+
+	return &output
 }
