@@ -18,8 +18,9 @@ type Client struct {
 	NatGatewayClient *network.NatGatewayClient
 
 	// Route Table
-	RouteTableClient       *network.RouteTableClient
-	RouteTableSubnetClient *network.RouteTableSubnetClient
+	RouteTableClient            *network.RouteTableClient
+	RouteTableSubnetClient      *network.RouteTableSubnetClient
+	RouteTableDescriptionClient *network.RouteTableDescriptionClient
 }
 
 func NewClient(o *common.ClientOptions) *Client {
@@ -50,6 +51,9 @@ func NewClient(o *common.ClientOptions) *Client {
 	RouteTableSubnetClient := network.NewRouteTableSubnetClientWithBaseURI(o.ResourceManagerEndpoint)
 	o.ConfigureClient(&RouteTableSubnetClient.Client, o.ResourceManagerAuthorizer)
 
+	RouteTableDescriptionClient := network.NewRouteTableDescriptionClientWithBaseURI(o.ResourceManagerEndpoint)
+	o.ConfigureClient(&RouteTableDescriptionClient.Client, o.ResourceManagerAuthorizer)
+
 	return &Client{
 		VirtualPrivateCloudClient: &VirtualPrivateCloudClient,
 		SubnetClient:              &SubnetClient,
@@ -63,7 +67,8 @@ func NewClient(o *common.ClientOptions) *Client {
 		NatGatewayClient: &NatGatewayClient,
 
 		// Route Table
-		RouteTableClient:       &RouteTableClient,
-		RouteTableSubnetClient: &RouteTableSubnetClient,
+		RouteTableClient:            &RouteTableClient,
+		RouteTableSubnetClient:      &RouteTableSubnetClient,
+		RouteTableDescriptionClient: &RouteTableDescriptionClient,
 	}
 }

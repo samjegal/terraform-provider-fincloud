@@ -91,7 +91,7 @@ func resourceRouteTable() *schema.Resource {
 						},
 					},
 				},
-				// Set: routeTableRuleHashSet,
+				Set: routeTableRuleHashSet,
 			},
 
 			"description": {
@@ -147,7 +147,13 @@ func resourceRouteTableCreate(d *schema.ResourceData, meta interface{}) error {
 
 	// 연관 서브넷 설정
 	if _, ok := d.GetOk("subnet"); ok {
-		err = routeTableSubnetUpdate(client, d)
+		subnetList := make([]string, 0)
+		subnets := d.Get("subnet").([]interface{})
+		for _, s := range subnets {
+			subnetList = append(subnetList, s.(string))
+		}
+
+		err = routeTableSubnetUpdate(client, d, subnetList)
 		if err != nil {
 			return err
 		}
@@ -194,20 +200,38 @@ func resourceRouteTableRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceRouteTableUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client)
-	_, cancel := timeouts.ForUpdate(meta.(*clients.Client).StopContext, d)
+	ctx, cancel := timeouts.ForUpdate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
-	// id := d.Id()
+	id := d.Id()
 
 	if d.HasChange("subnet") {
-		err := routeTableSubnetUpdate(client, d)
+		subnetList := make([]string, 0)
+		subnets := d.Get("subnet").([]interface{})
+		for _, s := range subnets {
+			subnetList = append(subnetList, s.(string))
+		}
+
+		err := routeTableSubnetUpdate(client, d, subnetList)
 		if err != nil {
 			return err
 		}
 	}
 
-	// if d.HasChange("route") {
-	// }
+	if d.HasChange("route") {
+		_, err := client.Network.RouteTableClient.Update(ctx, id, *expandRouteTableRuleParameter(client, d))
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("description") {
+		rtDescriptionClient := client.Network.RouteTableDescriptionClient
+		_, err := rtDescriptionClient.Update(ctx, id, expandRouteTableDescriptionParameter(d))
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
@@ -221,7 +245,13 @@ func resourceRouteTableDelete(d *schema.ResourceData, meta interface{}) error {
 	id := d.Id()
 	name := d.Get("name").(string)
 
-	_, err := routeTableClient.Delete(ctx, id)
+	// Clean subnet for remove route rable
+	err := routeTableSubnetUpdate(client, d, make([]string, 0))
+	if err != nil {
+		return err
+	}
+
+	_, err = routeTableClient.Delete(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -260,17 +290,11 @@ func routeTableId(client *clients.Client, name string) (string, error) {
 	return fmt.Sprintf("%d", *props.RouteTableNo), nil
 }
 
-func routeTableSubnetUpdate(client *clients.Client, d *schema.ResourceData) error {
+func routeTableSubnetUpdate(client *clients.Client, d *schema.ResourceData, subnetList []string) error {
 	ctx := client.StopContext
 
 	id := d.Id()
 	name := d.Get("name").(string)
-
-	subnetList := make([]string, 0)
-	subnets := d.Get("subnet").([]interface{})
-	for _, s := range subnets {
-		subnetList = append(subnetList, s.(string))
-	}
 
 	routeTableNumber, _ := strconv.Atoi(id)
 	_, err := client.Network.RouteTableSubnetClient.Update(ctx, id,
@@ -295,11 +319,6 @@ func routeTableSubnetUpdate(client *clients.Client, d *schema.ResourceData) erro
 	}
 
 	return nil
-}
-
-// TODO: 라우트 룰 정보를 업데이트 하는 함수에 정리해야 한다.
-func routeTableRuleUpdate() {
-
 }
 
 func expandRouteTableParameter(d *schema.ResourceData) (*network.RouteTableParameter, error) {
@@ -367,7 +386,7 @@ func routeTableRuleHashSet(input interface{}) int {
 		}
 
 		if v, ok := m["endpoint"]; ok {
-			buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+			buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 		}
 	}
 
@@ -388,8 +407,22 @@ func expandRouteTableRuleContentParameter(client *clients.Client, d *schema.Reso
 
 	routes := d.Get("route").(*schema.Set).List()
 	for _, r := range routes {
-		_ = r.(map[string]interface{})
+		rule := r.(map[string]interface{})
+
+		cidrBlock := rule["cidr_block"].(string)
+		endpoint := rule["endpoint"].(int)
+
+		output = append(output, network.RouteTableRuleContentParameter{
+			DestinationSubnetCidr: utils.String(cidrBlock),
+			EndpointNo:            utils.Int32(int32(endpoint)),
+		})
 	}
 
 	return &output
+}
+
+func expandRouteTableDescriptionParameter(d *schema.ResourceData) network.RouteTableDescriptionParameter {
+	return network.RouteTableDescriptionParameter{
+		Description: utils.String(d.Get("description").(string)),
+	}
 }
