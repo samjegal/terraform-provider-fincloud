@@ -232,7 +232,7 @@ func expandNetworkAclRule(r map[string]interface{}) *network.ACLRuleProperties {
 
 	rule := network.ACLRuleProperties{
 		IsInboundRule:    utils.Bool(dir),
-		ProtocolTypeCode: network.ProtocolTypeCode(r["protocol"].(string)),
+		ProtocolTypeCode: network.ACLRuleProtocolTypeCode(r["protocol"].(string)),
 		IPBlock:          utils.String(r["cidr_block"].(string)),
 		Priority:         utils.Int32(int32(r["priority"].(int))),
 	}
@@ -330,7 +330,7 @@ func flattenNetworkAclRules(param *[]network.ACLRuleContentProperties) []interfa
 			}
 		}
 
-		protocol := string(network.ProtocolTypeCode(v.ProtocolTypeCode))
+		protocol := string(network.ACLRuleProtocolTypeCode(v.ProtocolTypeCode))
 
 		switch protocol {
 		case "icmp", "tcp", "udp":
