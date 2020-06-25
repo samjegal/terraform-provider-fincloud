@@ -9,6 +9,23 @@ import (
 // The package's fully qualified name.
 const fqdn = "github.com/samjegal/fincloud-sdk-for-go/services/network"
 
+// ACLRuleProtocolTypeCode enumerates the values for acl rule protocol type code.
+type ACLRuleProtocolTypeCode string
+
+const (
+	// ICMP ...
+	ICMP ACLRuleProtocolTypeCode = "ICMP"
+	// TCP ...
+	TCP ACLRuleProtocolTypeCode = "TCP"
+	// UDP ...
+	UDP ACLRuleProtocolTypeCode = "UDP"
+)
+
+// PossibleACLRuleProtocolTypeCodeValues returns an array of possible values for the ACLRuleProtocolTypeCode const type.
+func PossibleACLRuleProtocolTypeCodeValues() []ACLRuleProtocolTypeCode {
+	return []ACLRuleProtocolTypeCode{ICMP, TCP, UDP}
+}
+
 // NatGatewayStatusCode enumerates the values for nat gateway status code.
 type NatGatewayStatusCode string
 
@@ -41,40 +58,6 @@ const (
 // PossibleNatGatewayStatusNameValues returns an array of possible values for the NatGatewayStatusName const type.
 func PossibleNatGatewayStatusNameValues() []NatGatewayStatusName {
 	return []NatGatewayStatusName{삭제중, 운영중, 준비중}
-}
-
-// ProtocolTypeCode enumerates the values for protocol type code.
-type ProtocolTypeCode string
-
-const (
-	// ICMP ...
-	ICMP ProtocolTypeCode = "ICMP"
-	// TCP ...
-	TCP ProtocolTypeCode = "TCP"
-	// UDP ...
-	UDP ProtocolTypeCode = "UDP"
-)
-
-// PossibleProtocolTypeCodeValues returns an array of possible values for the ProtocolTypeCode const type.
-func PossibleProtocolTypeCodeValues() []ProtocolTypeCode {
-	return []ProtocolTypeCode{ICMP, TCP, UDP}
-}
-
-// ProtocolTypeCode1 enumerates the values for protocol type code 1.
-type ProtocolTypeCode1 string
-
-const (
-	// ProtocolTypeCode1ICMP ...
-	ProtocolTypeCode1ICMP ProtocolTypeCode1 = "ICMP"
-	// ProtocolTypeCode1TCP ...
-	ProtocolTypeCode1TCP ProtocolTypeCode1 = "TCP"
-	// ProtocolTypeCode1UDP ...
-	ProtocolTypeCode1UDP ProtocolTypeCode1 = "UDP"
-)
-
-// PossibleProtocolTypeCode1Values returns an array of possible values for the ProtocolTypeCode1 const type.
-func PossibleProtocolTypeCode1Values() []ProtocolTypeCode1 {
-	return []ProtocolTypeCode1{ProtocolTypeCode1ICMP, ProtocolTypeCode1TCP, ProtocolTypeCode1UDP}
 }
 
 // RouteTableStatusCode enumerates the values for route table status code.
@@ -205,8 +188,8 @@ type ACLRuleContentProperties struct {
 	NetworkACLNo *int32 `json:"networkAclNo,omitempty"`
 	// Priority - 우선순위 번호
 	Priority *int32 `json:"priority,omitempty"`
-	// ProtocolTypeCode - 프로토콜 타입 코드. Possible values include: 'ProtocolTypeCode1ICMP', 'ProtocolTypeCode1UDP', 'ProtocolTypeCode1TCP'
-	ProtocolTypeCode ProtocolTypeCode1 `json:"protocolTypeCode,omitempty"`
+	// ProtocolTypeCode - 프로토콜 타입 코드. Possible values include: 'ICMP', 'UDP', 'TCP'
+	ProtocolTypeCode ACLRuleProtocolTypeCode `json:"protocolTypeCode,omitempty"`
 	// IPBlock - ACL rule 정책 정보 (CIDR)
 	IPBlock *string `json:"ipBlock,omitempty"`
 	// PortRange - 포트 범위
@@ -290,7 +273,7 @@ type ACLRuleProperties struct {
 	// Priority - 우선순위 번호
 	Priority *int32 `json:"priority,omitempty"`
 	// ProtocolTypeCode - 프로토콜 타입 코드. Possible values include: 'ICMP', 'UDP', 'TCP'
-	ProtocolTypeCode ProtocolTypeCode `json:"protocolTypeCode,omitempty"`
+	ProtocolTypeCode ACLRuleProtocolTypeCode `json:"protocolTypeCode,omitempty"`
 	// IPBlock - ACL rule 정책 정보 (CIDR)
 	IPBlock *string `json:"ipBlock,omitempty"`
 	// Description - ACL rule 설명
@@ -375,6 +358,12 @@ type NatGatewaySearchParameter struct {
 	PageNo *int32 `json:"pageNo,omitempty"`
 	// PageSizeNo - 한 페이지에 나올 NAT Gateway 개수
 	PageSizeNo *int32 `json:"pageSizeNo,omitempty"`
+}
+
+// RouteTableDescriptionParameter ...
+type RouteTableDescriptionParameter struct {
+	// Description - Route Table 설명
+	Description *string `json:"description,omitempty"`
 }
 
 // RouteTableEndpointsContentParameter ...

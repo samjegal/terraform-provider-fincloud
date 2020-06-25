@@ -11,6 +11,7 @@ import (
 func SupportedServices() []common.ServiceRegistration {
 	return []common.ServiceRegistration{
 		compute.Registration{},
+		location.Registration{},
 		network.Registration{},
 		location.Registration{},
 		vpn.Registration{},

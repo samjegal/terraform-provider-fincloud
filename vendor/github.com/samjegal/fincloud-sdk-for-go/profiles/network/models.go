@@ -23,28 +23,20 @@ const (
 	DefaultBaseURI = original.DefaultBaseURI
 )
 
+type ACLRuleProtocolTypeCode = original.ACLRuleProtocolTypeCode
+
+const (
+	ICMP ACLRuleProtocolTypeCode = original.ICMP
+	TCP  ACLRuleProtocolTypeCode = original.TCP
+	UDP  ACLRuleProtocolTypeCode = original.UDP
+)
+
 type NatGatewayStatusCode = original.NatGatewayStatusCode
 
 const (
 	INIT     NatGatewayStatusCode = original.INIT
 	RUN      NatGatewayStatusCode = original.RUN
 	TERMTING NatGatewayStatusCode = original.TERMTING
-)
-
-type ProtocolTypeCode = original.ProtocolTypeCode
-
-const (
-	ICMP ProtocolTypeCode = original.ICMP
-	TCP  ProtocolTypeCode = original.TCP
-	UDP  ProtocolTypeCode = original.UDP
-)
-
-type ProtocolTypeCode1 = original.ProtocolTypeCode1
-
-const (
-	ProtocolTypeCode1ICMP ProtocolTypeCode1 = original.ProtocolTypeCode1ICMP
-	ProtocolTypeCode1TCP  ProtocolTypeCode1 = original.ProtocolTypeCode1TCP
-	ProtocolTypeCode1UDP  ProtocolTypeCode1 = original.ProtocolTypeCode1UDP
 )
 
 type RouteTableStatusCode = original.RouteTableStatusCode
@@ -110,6 +102,8 @@ type NatGatewaySearchParameter = original.NatGatewaySearchParameter
 type NatGatewayStatusName = original.NatGatewayStatusName
 type OutboundRuleClient = original.OutboundRuleClient
 type RouteTableClient = original.RouteTableClient
+type RouteTableDescriptionClient = original.RouteTableDescriptionClient
+type RouteTableDescriptionParameter = original.RouteTableDescriptionParameter
 type RouteTableEndpointTypesContentParameter = original.RouteTableEndpointTypesContentParameter
 type RouteTableEndpointTypesParameter = original.RouteTableEndpointTypesParameter
 type RouteTableEndpointsContentParameter = original.RouteTableEndpointsContentParameter
@@ -174,6 +168,12 @@ func NewRouteTableClient() RouteTableClient {
 func NewRouteTableClientWithBaseURI(baseURI string) RouteTableClient {
 	return original.NewRouteTableClientWithBaseURI(baseURI)
 }
+func NewRouteTableDescriptionClient() RouteTableDescriptionClient {
+	return original.NewRouteTableDescriptionClient()
+}
+func NewRouteTableDescriptionClientWithBaseURI(baseURI string) RouteTableDescriptionClient {
+	return original.NewRouteTableDescriptionClientWithBaseURI(baseURI)
+}
 func NewRouteTableSubnetClient() RouteTableSubnetClient {
 	return original.NewRouteTableSubnetClient()
 }
@@ -201,17 +201,14 @@ func NewVirtualPrivateCloudClientWithBaseURI(baseURI string) VirtualPrivateCloud
 func NewWithBaseURI(baseURI string) BaseClient {
 	return original.NewWithBaseURI(baseURI)
 }
+func PossibleACLRuleProtocolTypeCodeValues() []ACLRuleProtocolTypeCode {
+	return original.PossibleACLRuleProtocolTypeCodeValues()
+}
 func PossibleNatGatewayStatusCodeValues() []NatGatewayStatusCode {
 	return original.PossibleNatGatewayStatusCodeValues()
 }
 func PossibleNatGatewayStatusNameValues() []NatGatewayStatusName {
 	return original.PossibleNatGatewayStatusNameValues()
-}
-func PossibleProtocolTypeCode1Values() []ProtocolTypeCode1 {
-	return original.PossibleProtocolTypeCode1Values()
-}
-func PossibleProtocolTypeCodeValues() []ProtocolTypeCode {
-	return original.PossibleProtocolTypeCodeValues()
 }
 func PossibleRouteTableStatusCodeValues() []RouteTableStatusCode {
 	return original.PossibleRouteTableStatusCodeValues()

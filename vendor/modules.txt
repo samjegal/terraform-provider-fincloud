@@ -300,12 +300,13 @@ github.com/posener/complete
 github.com/posener/complete/cmd
 github.com/posener/complete/cmd/install
 github.com/posener/complete/match
-# github.com/samjegal/fincloud-sdk-for-go v1.2.2
+# github.com/samjegal/fincloud-sdk-for-go v1.4.0
 ## explicit
 github.com/samjegal/fincloud-sdk-for-go/profiles/compute
 github.com/samjegal/fincloud-sdk-for-go/profiles/network
 github.com/samjegal/fincloud-sdk-for-go/profiles/sslvpn
 github.com/samjegal/fincloud-sdk-for-go/services/compute
+github.com/samjegal/fincloud-sdk-for-go/services/loadbalancer
 github.com/samjegal/fincloud-sdk-for-go/services/location
 github.com/samjegal/fincloud-sdk-for-go/services/network
 github.com/samjegal/fincloud-sdk-for-go/services/sslvpn

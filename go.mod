@@ -8,6 +8,6 @@ require (
 	github.com/hashicorp/hcl/v2 v2.4.0 // indirect
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20200413172006-36d6f40eb7d7 // indirect
 	github.com/hashicorp/terraform-plugin-sdk v1.10.0
-	github.com/samjegal/fincloud-sdk-for-go v1.2.2
+	github.com/samjegal/fincloud-sdk-for-go v1.4.0
 	github.com/samjegal/go-fincloud-helpers v0.2.0
 )

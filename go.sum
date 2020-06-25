@@ -270,8 +270,8 @@ github.com/prometheus/procfs v0.0.0-20190507164030-5867b95ac084/go.mod h1:TjEm7z
 github.com/prometheus/tsdb v0.7.1/go.mod h1:qhTCs0VvXwvX/y3TZrWD7rabWM+ijKTux40TwIPHuXU=
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
-github.com/samjegal/fincloud-sdk-for-go v1.2.2 h1:NpHg3pClVOto4ZnLOInx+0V4d78IZQIt8o/uU98nbG8=
-github.com/samjegal/fincloud-sdk-for-go v1.2.2/go.mod h1:VoJtv+Amf04KECwJGJxoBQvEZYVh+RxWqdtRDp6IYFQ=
+github.com/samjegal/fincloud-sdk-for-go v1.4.0 h1:QA6g7UJfj79s5QMIYJ6afiLF4ieGzQyj6UrT5H3u7Fs=
+github.com/samjegal/fincloud-sdk-for-go v1.4.0/go.mod h1:VoJtv+Amf04KECwJGJxoBQvEZYVh+RxWqdtRDp6IYFQ=
 github.com/samjegal/go-fincloud-helpers v0.2.0 h1:fHGuhM1GytBQV1MycC1VGmAt6dkalyE5DHXwr2VG8gs=
 github.com/samjegal/go-fincloud-helpers v0.2.0/go.mod h1:hINsgEp09K0DXx/X3V0xz4g8fRLn9pG5q04mpzRTE4A=
 github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
