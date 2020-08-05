@@ -300,7 +300,7 @@ github.com/posener/complete
 github.com/posener/complete/cmd
 github.com/posener/complete/cmd/install
 github.com/posener/complete/match
-# github.com/samjegal/fincloud-sdk-for-go v1.4.0
+# github.com/samjegal/fincloud-sdk-for-go v1.6.1
 ## explicit
 github.com/samjegal/fincloud-sdk-for-go/profiles/compute
 github.com/samjegal/fincloud-sdk-for-go/profiles/network
