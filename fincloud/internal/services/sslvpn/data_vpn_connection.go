@@ -1,4 +1,4 @@
-package vpn
+package sslvpn
 
 import (
 	"fmt"
@@ -12,11 +12,11 @@ import (
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/timeouts"
 )
 
-var vpnConnectionDataSourceName = "fincloud_vpn_connection"
+var sslvpnConnectionDataSourceName = "fincloud_sslvpn_connection"
 
-func dataSourceVpnConnection() *schema.Resource {
+func dataSourceSslVpnConnection() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceVpnConnectionRead,
+		Read: dataSourceSslVpnConnectionRead,
 
 		Timeouts: &schema.ResourceTimeout{
 			Read: schema.DefaultTimeout(5 * time.Minute),
@@ -50,8 +50,8 @@ func dataSourceVpnConnection() *schema.Resource {
 	}
 }
 
-func dataSourceVpnConnectionRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Vpn.VpnConnectionClient
+func dataSourceSslVpnConnectionRead(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*clients.Client).SslVpn.SslVpnConnectionClient
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 

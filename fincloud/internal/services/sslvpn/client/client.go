@@ -6,14 +6,14 @@ import (
 )
 
 type Client struct {
-	VpnConnectionClient *sslvpn.Client
+	SslVpnConnectionClient *sslvpn.Client
 }
 
 func NewClient(o *common.ClientOptions) *Client {
-	VpnConnectionClient := sslvpn.NewClientWithBaseURI(o.ResourceManagerEndpoint)
-	o.ConfigureClient(&VpnConnectionClient.Client, o.ResourceManagerAuthorizer)
+	SslVpnConnectionClient := sslvpn.NewClientWithBaseURI(o.ResourceManagerEndpoint)
+	o.ConfigureClient(&SslVpnConnectionClient.Client, o.ResourceManagerAuthorizer)
 
 	return &Client{
-		VpnConnectionClient: &VpnConnectionClient,
+		SslVpnConnectionClient: &SslVpnConnectionClient,
 	}
 }

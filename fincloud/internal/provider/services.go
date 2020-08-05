@@ -6,7 +6,7 @@ import (
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/loadbalancer"
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/location"
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/network"
-	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/vpn"
+	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/services/sslvpn"
 )
 
 func SupportedServices() []common.ServiceRegistration {
@@ -15,6 +15,6 @@ func SupportedServices() []common.ServiceRegistration {
 		location.Registration{},
 		network.Registration{},
 		loadbalancer.Registration{},
-		vpn.Registration{},
+		sslvpn.Registration{},
 	}
 }

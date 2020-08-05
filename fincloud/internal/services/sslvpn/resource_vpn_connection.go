@@ -1,4 +1,4 @@
-package vpn
+package sslvpn
 
 import (
 	"fmt"
@@ -13,14 +13,14 @@ import (
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/utils"
 )
 
-var vpnConnectionResourceName = "fincloud_vpn_connection"
+var sslvpnConnectionResourceName = "fincloud_sslvpn_connection"
 
-func resourceVpnConnection() *schema.Resource {
+func resourceSslVpnConnection() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceVpnConnectionCreateOrUpdate,
-		Read:   resourceVpnConnectionRead,
-		Update: resourceVpnConnectionCreateOrUpdate,
-		Delete: resourceVpnConnectionDelete,
+		Create: resourceSslVpnConnectionCreateOrUpdate,
+		Read:   resourceSslVpnConnectionRead,
+		Update: resourceSslVpnConnectionCreateOrUpdate,
+		Delete: resourceSslVpnConnectionDelete,
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -61,8 +61,8 @@ func resourceVpnConnection() *schema.Resource {
 	}
 }
 
-func resourceVpnConnectionCreateOrUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Vpn.VpnConnectionClient
+func resourceSslVpnConnectionCreateOrUpdate(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*clients.Client).SslVpn.SslVpnConnectionClient
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
@@ -78,17 +78,17 @@ func resourceVpnConnectionCreateOrUpdate(d *schema.ResourceData, meta interface{
 			return fmt.Errorf("서버 SSL VPN 스펙은 3, 5, 10의 사용자 제한만 지원합니다.")
 		}
 
-		_, err := client.UpdateSpec(ctx, expandVpnConnectionLimitUserParameter(d))
+		_, err := client.UpdateSpec(ctx, expandSslVpnConnectionLimitUserParameter(d))
 		if err != nil {
 			return err
 		}
 	}
 
-	return resourceVpnConnectionRead(d, meta)
+	return resourceSslVpnConnectionRead(d, meta)
 }
 
-func resourceVpnConnectionRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Vpn.VpnConnectionClient
+func resourceSslVpnConnectionRead(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*clients.Client).SslVpn.SslVpnConnectionClient
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
 
@@ -135,12 +135,12 @@ func resourceVpnConnectionRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceVpnConnectionDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceSslVpnConnectionDelete(d *schema.ResourceData, meta interface{}) error {
 	d.SetId("")
 	return nil
 }
 
-func expandVpnConnectionLimitUserParameter(d *schema.ResourceData) sslvpn.LimitUserCountParameter {
+func expandSslVpnConnectionLimitUserParameter(d *schema.ResourceData) sslvpn.LimitUserCountParameter {
 	return sslvpn.LimitUserCountParameter{
 		UserCountLimitation: utils.Int32(int32(d.Get("limit").(int))),
 	}
