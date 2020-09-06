@@ -9,12 +9,12 @@ type serviceClientAccessAuth struct {
 }
 
 func (s serviceClientAccessAuth) isApplicable(b Builder) bool {
-	return b.AccessKeyId != ""
+	return b.AccessKey != ""
 }
 
 func (s serviceClientAccessAuth) build(b Builder) (authMethod, error) {
 	method := serviceClientAccessAuth{
-		accessKeyId: b.AccessKeyId,
+		accessKeyId: b.AccessKey,
 	}
 	return method, nil
 }

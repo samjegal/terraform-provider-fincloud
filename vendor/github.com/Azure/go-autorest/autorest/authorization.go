@@ -34,6 +34,10 @@ const (
 	golangBingAPISdkHeaderValue = "Go-SDK"
 	authorization               = "Authorization"
 	basic                       = "Basic"
+
+	apiGwAPIKeyAuthorizerHeader    = "x-ncp-apigw-api-key"
+	iamAccessKeyHeader             = "x-ncp-iam-access-key"
+	apiGwSignatureAuthroizerHeader = "x-ncp-apigw-signature-v2"
 )
 
 // Authorizer is the interface that provides a PrepareDecorator used to supply request
@@ -136,6 +140,11 @@ func (ba *BearerAuthorizer) WithAuthorization() PrepareDecorator {
 			return r, err
 		})
 	}
+}
+
+// TokenProvider returns OAuthTokenProvider so that it can be used for authorization outside the REST.
+func (ba *BearerAuthorizer) TokenProvider() adal.OAuthTokenProvider {
+	return ba.tokenProvider
 }
 
 // BearerAuthorizerCallbackFunc is the authentication callback signature.
@@ -331,7 +340,7 @@ func (mt multiTenantSPTAuthorizer) WithAuthorization() PrepareDecorator {
 			for i := range auxTokens {
 				auxTokens[i] = fmt.Sprintf("Bearer %s", auxTokens[i])
 			}
-			return Prepare(r, WithHeader(headerAuxAuthorization, strings.Join(auxTokens, "; ")))
+			return Prepare(r, WithHeader(headerAuxAuthorization, strings.Join(auxTokens, ", ")))
 		})
 	}
 }

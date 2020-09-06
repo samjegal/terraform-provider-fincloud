@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/mailru/easyjson"
@@ -49,7 +50,7 @@ func (t UnserializableValue) String() string {
 // See: https://chromedevtools.github.io/devtools-protocol/tot/Runtime#type-RemoteObject
 type RemoteObject struct {
 	Type                Type                `json:"type"`                          // Object type.
-	Subtype             Subtype             `json:"subtype,omitempty"`             // Object subtype hint. Specified for object type values only.
+	Subtype             Subtype             `json:"subtype,omitempty"`             // Object subtype hint. Specified for object or wasm type values only.
 	ClassName           string              `json:"className,omitempty"`           // Object class (constructor) name. Specified for object type values only.
 	Value               easyjson.RawMessage `json:"value,omitempty"`               // Remote object value in case of primitive values or JSON values (if it was requested).
 	UnserializableValue UnserializableValue `json:"unserializableValue,omitempty"` // Primitive value which can not be JSON-stringified does not have value, but gets this property.
@@ -182,9 +183,14 @@ type ExceptionDetails struct {
 
 // Error satisfies the error interface.
 func (e *ExceptionDetails) Error() string {
+	var b strings.Builder
 	// TODO: watch script parsed events and match the ExceptionDetails.ScriptID
 	// to the name/location of the actual code and display here
-	return fmt.Sprintf("encountered exception '%s' (%d:%d)", e.Text, e.LineNumber, e.ColumnNumber)
+	fmt.Fprintf(&b, "exception %q (%d:%d)", e.Text, e.LineNumber, e.ColumnNumber)
+	if obj := e.Exception; obj != nil {
+		fmt.Fprintf(&b, ": %s", obj.Description)
+	}
+	return b.String()
 }
 
 // Timestamp number of milliseconds since epoch.
@@ -291,6 +297,7 @@ const (
 	TypeBoolean   Type = "boolean"
 	TypeSymbol    Type = "symbol"
 	TypeBigint    Type = "bigint"
+	TypeWasm      Type = "wasm"
 	TypeAccessor  Type = "accessor"
 )
 
@@ -323,6 +330,8 @@ func (t *Type) UnmarshalEasyJSON(in *jlexer.Lexer) {
 		*t = TypeSymbol
 	case TypeBigint:
 		*t = TypeBigint
+	case TypeWasm:
+		*t = TypeWasm
 	case TypeAccessor:
 		*t = TypeAccessor
 
@@ -336,7 +345,8 @@ func (t *Type) UnmarshalJSON(buf []byte) error {
 	return easyjson.Unmarshal(buf, t)
 }
 
-// Subtype object subtype hint. Specified for object type values only.
+// Subtype object subtype hint. Specified for object or wasm type values
+// only.
 //
 // See: https://chromedevtools.github.io/devtools-protocol/tot/Runtime#type-RemoteObject
 type Subtype string
@@ -365,6 +375,12 @@ const (
 	SubtypeTypedarray  Subtype = "typedarray"
 	SubtypeArraybuffer Subtype = "arraybuffer"
 	SubtypeDataview    Subtype = "dataview"
+	SubtypeI32         Subtype = "i32"
+	SubtypeI64         Subtype = "i64"
+	SubtypeF32         Subtype = "f32"
+	SubtypeF64         Subtype = "f64"
+	SubtypeV128        Subtype = "v128"
+	SubtypeExternref   Subtype = "externref"
 )
 
 // MarshalEasyJSON satisfies easyjson.Marshaler.
@@ -414,6 +430,18 @@ func (t *Subtype) UnmarshalEasyJSON(in *jlexer.Lexer) {
 		*t = SubtypeArraybuffer
 	case SubtypeDataview:
 		*t = SubtypeDataview
+	case SubtypeI32:
+		*t = SubtypeI32
+	case SubtypeI64:
+		*t = SubtypeI64
+	case SubtypeF32:
+		*t = SubtypeF32
+	case SubtypeF64:
+		*t = SubtypeF64
+	case SubtypeV128:
+		*t = SubtypeV128
+	case SubtypeExternref:
+		*t = SubtypeExternref
 
 	default:
 		in.AddError(errors.New("unknown Subtype value"))
