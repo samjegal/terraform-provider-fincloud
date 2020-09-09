@@ -33,9 +33,8 @@ func NewClientWithBaseURI(baseURI string) Client {
 // Create vPC를 생성
 // Parameters:
 // ipv4CidrBlock - IP 주소 범위
-// regionCode - REGION 코드
 // vpcName - VPC 이름
-func (client Client) Create(ctx context.Context, ipv4CidrBlock string, regionCode string, vpcName string) (result Response, err error) {
+func (client Client) Create(ctx context.Context, ipv4CidrBlock string, vpcName string) (result CreateResponse, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/Client.Create")
 		defer func() {
@@ -46,7 +45,7 @@ func (client Client) Create(ctx context.Context, ipv4CidrBlock string, regionCod
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	req, err := client.CreatePreparer(ctx, ipv4CidrBlock, regionCode, vpcName)
+	req, err := client.CreatePreparer(ctx, ipv4CidrBlock, vpcName)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "vpc.Client", "Create", nil, "Failure preparing request")
 		return
@@ -68,16 +67,14 @@ func (client Client) Create(ctx context.Context, ipv4CidrBlock string, regionCod
 }
 
 // CreatePreparer prepares the Create request.
-func (client Client) CreatePreparer(ctx context.Context, ipv4CidrBlock string, regionCode string, vpcName string) (*http.Request, error) {
+func (client Client) CreatePreparer(ctx context.Context, ipv4CidrBlock string, vpcName string) (*http.Request, error) {
 	queryParameters := map[string]interface{}{
-		"ipv4CidrBlock":      autorest.Encode("query", ipv4CidrBlock),
+		"ipv4CidrBlock":      ipv4CidrBlock,
 		"responseFormatType": autorest.Encode("query", "json"),
 	}
-	if len(regionCode) > 0 {
-		queryParameters["regionCode"] = autorest.Encode("query", regionCode)
-	} else {
-		queryParameters["regionCode"] = autorest.Encode("query", "FKR")
-	}
+
+	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
+
 	if len(vpcName) > 0 {
 		queryParameters["vpcName"] = autorest.Encode("query", vpcName)
 	}
@@ -88,6 +85,7 @@ func (client Client) CreatePreparer(ctx context.Context, ipv4CidrBlock string, r
 	if err != nil {
 		return nil, err
 	}
+
 	preparer := autorest.CreatePreparer(
 		autorest.AsPost(),
 		autorest.WithBaseURL(client.BaseURI),
@@ -107,7 +105,7 @@ func (client Client) CreateSender(req *http.Request) (*http.Response, error) {
 
 // CreateResponder handles the response to the Create request. The method always
 // closes the http.Response Body.
-func (client Client) CreateResponder(resp *http.Response) (result Response, err error) {
+func (client Client) CreateResponder(resp *http.Response) (result CreateResponse, err error) {
 	err = autorest.Respond(
 		resp,
 		azure.WithErrorUnlessStatusCode(http.StatusOK),
@@ -120,8 +118,7 @@ func (client Client) CreateResponder(resp *http.Response) (result Response, err 
 // Delete vPC를 삭제
 // Parameters:
 // vpcNo - VPC 번호
-// regionCode - REGION 코드
-func (client Client) Delete(ctx context.Context, vpcNo string, regionCode string) (result Response, err error) {
+func (client Client) Delete(ctx context.Context, vpcNo string) (result DeleteResponse, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/Client.Delete")
 		defer func() {
@@ -132,7 +129,7 @@ func (client Client) Delete(ctx context.Context, vpcNo string, regionCode string
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	req, err := client.DeletePreparer(ctx, vpcNo, regionCode)
+	req, err := client.DeletePreparer(ctx, vpcNo)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "vpc.Client", "Delete", nil, "Failure preparing request")
 		return
@@ -154,16 +151,13 @@ func (client Client) Delete(ctx context.Context, vpcNo string, regionCode string
 }
 
 // DeletePreparer prepares the Delete request.
-func (client Client) DeletePreparer(ctx context.Context, vpcNo string, regionCode string) (*http.Request, error) {
+func (client Client) DeletePreparer(ctx context.Context, vpcNo string) (*http.Request, error) {
 	queryParameters := map[string]interface{}{
 		"responseFormatType": autorest.Encode("query", "json"),
 		"vpcNo":              autorest.Encode("query", vpcNo),
 	}
-	if len(regionCode) > 0 {
-		queryParameters["regionCode"] = autorest.Encode("query", regionCode)
-	} else {
-		queryParameters["regionCode"] = autorest.Encode("query", "FKR")
-	}
+
+	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
 	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
@@ -171,6 +165,7 @@ func (client Client) DeletePreparer(ctx context.Context, vpcNo string, regionCod
 	if err != nil {
 		return nil, err
 	}
+
 	preparer := autorest.CreatePreparer(
 		autorest.AsPost(),
 		autorest.WithBaseURL(client.BaseURI),
@@ -190,7 +185,7 @@ func (client Client) DeleteSender(req *http.Request) (*http.Response, error) {
 
 // DeleteResponder handles the response to the Delete request. The method always
 // closes the http.Response Body.
-func (client Client) DeleteResponder(resp *http.Response) (result Response, err error) {
+func (client Client) DeleteResponder(resp *http.Response) (result DeleteResponse, err error) {
 	err = autorest.Respond(
 		resp,
 		azure.WithErrorUnlessStatusCode(http.StatusOK),
@@ -203,8 +198,7 @@ func (client Client) DeleteResponder(resp *http.Response) (result Response, err 
 // GetDetail VPC 상세정보를 조회
 // Parameters:
 // vpcNo - VPC 번호
-// regionCode - REGION 코드
-func (client Client) GetDetail(ctx context.Context, vpcNo string, regionCode string) (result DetailResponse, err error) {
+func (client Client) GetDetail(ctx context.Context, vpcNo string) (result DetailResponse, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/Client.GetDetail")
 		defer func() {
@@ -215,7 +209,7 @@ func (client Client) GetDetail(ctx context.Context, vpcNo string, regionCode str
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	req, err := client.GetDetailPreparer(ctx, vpcNo, regionCode)
+	req, err := client.GetDetailPreparer(ctx, vpcNo)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "vpc.Client", "GetDetail", nil, "Failure preparing request")
 		return
@@ -237,16 +231,13 @@ func (client Client) GetDetail(ctx context.Context, vpcNo string, regionCode str
 }
 
 // GetDetailPreparer prepares the GetDetail request.
-func (client Client) GetDetailPreparer(ctx context.Context, vpcNo string, regionCode string) (*http.Request, error) {
+func (client Client) GetDetailPreparer(ctx context.Context, vpcNo string) (*http.Request, error) {
 	queryParameters := map[string]interface{}{
 		"responseFormatType": autorest.Encode("query", "json"),
 		"vpcNo":              autorest.Encode("query", vpcNo),
 	}
-	if len(regionCode) > 0 {
-		queryParameters["regionCode"] = autorest.Encode("query", regionCode)
-	} else {
-		queryParameters["regionCode"] = autorest.Encode("query", "FKR")
-	}
+
+	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
 	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
@@ -254,6 +245,7 @@ func (client Client) GetDetailPreparer(ctx context.Context, vpcNo string, region
 	if err != nil {
 		return nil, err
 	}
+
 	preparer := autorest.CreatePreparer(
 		autorest.AsGet(),
 		autorest.WithBaseURL(client.BaseURI),
@@ -285,11 +277,10 @@ func (client Client) GetDetailResponder(resp *http.Response) (result DetailRespo
 
 // GetList VPC 리스트를 조회
 // Parameters:
-// regionCode - REGION 코드
 // vpcStatusCode - VPC 상태 코드
 // vpcName - VPC 이름
 // vpcNoListN - VPC 번호 리스트
-func (client Client) GetList(ctx context.Context, regionCode string, vpcStatusCode StatusCode, vpcName string, vpcNoListN string) (result ListResponse, err error) {
+func (client Client) GetList(ctx context.Context, vpcStatusCode StatusCode, vpcName string, vpcNoListN string) (result ListResponse, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/Client.GetList")
 		defer func() {
@@ -300,7 +291,7 @@ func (client Client) GetList(ctx context.Context, regionCode string, vpcStatusCo
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	req, err := client.GetListPreparer(ctx, regionCode, vpcStatusCode, vpcName, vpcNoListN)
+	req, err := client.GetListPreparer(ctx, vpcStatusCode, vpcName, vpcNoListN)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "vpc.Client", "GetList", nil, "Failure preparing request")
 		return
@@ -322,15 +313,13 @@ func (client Client) GetList(ctx context.Context, regionCode string, vpcStatusCo
 }
 
 // GetListPreparer prepares the GetList request.
-func (client Client) GetListPreparer(ctx context.Context, regionCode string, vpcStatusCode StatusCode, vpcName string, vpcNoListN string) (*http.Request, error) {
+func (client Client) GetListPreparer(ctx context.Context, vpcStatusCode StatusCode, vpcName string, vpcNoListN string) (*http.Request, error) {
 	queryParameters := map[string]interface{}{
 		"responseFormatType": autorest.Encode("query", "json"),
 	}
-	if len(regionCode) > 0 {
-		queryParameters["regionCode"] = autorest.Encode("query", regionCode)
-	} else {
-		queryParameters["regionCode"] = autorest.Encode("query", "FKR")
-	}
+
+	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
+
 	if len(string(vpcStatusCode)) > 0 {
 		queryParameters["vpcStatusCode"] = autorest.Encode("query", vpcStatusCode)
 	}
@@ -347,6 +336,7 @@ func (client Client) GetListPreparer(ctx context.Context, regionCode string, vpc
 	if err != nil {
 		return nil, err
 	}
+
 	preparer := autorest.CreatePreparer(
 		autorest.AsGet(),
 		autorest.WithBaseURL(client.BaseURI),

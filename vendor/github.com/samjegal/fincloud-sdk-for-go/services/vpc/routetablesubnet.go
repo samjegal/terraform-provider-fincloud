@@ -36,8 +36,7 @@ func NewRouteTableSubnetClientWithBaseURI(baseURI string) RouteTableSubnetClient
 // vpcNo - VPC 번호
 // routeTableNo - 라우트 테이블 번호
 // subnetNoListN - 서브넷 번호 리스트
-// regionCode - REGION 코드
-func (client RouteTableSubnetClient) Add(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string, regionCode string) (result RouteTableSubnetResponse, err error) {
+func (client RouteTableSubnetClient) Add(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string) (result RouteTableSubnetAddResponse, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/RouteTableSubnetClient.Add")
 		defer func() {
@@ -48,7 +47,7 @@ func (client RouteTableSubnetClient) Add(ctx context.Context, vpcNo string, rout
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	req, err := client.AddPreparer(ctx, vpcNo, routeTableNo, subnetNoListN, regionCode)
+	req, err := client.AddPreparer(ctx, vpcNo, routeTableNo, subnetNoListN)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "vpc.RouteTableSubnetClient", "Add", nil, "Failure preparing request")
 		return
@@ -70,18 +69,15 @@ func (client RouteTableSubnetClient) Add(ctx context.Context, vpcNo string, rout
 }
 
 // AddPreparer prepares the Add request.
-func (client RouteTableSubnetClient) AddPreparer(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string, regionCode string) (*http.Request, error) {
+func (client RouteTableSubnetClient) AddPreparer(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string) (*http.Request, error) {
 	queryParameters := map[string]interface{}{
 		"responseFormatType": autorest.Encode("query", "json"),
 		"routeTableNo":       autorest.Encode("query", routeTableNo),
 		"subnetNoList.N":     autorest.Encode("query", subnetNoListN),
 		"vpcNo":              autorest.Encode("query", vpcNo),
 	}
-	if len(regionCode) > 0 {
-		queryParameters["regionCode"] = autorest.Encode("query", regionCode)
-	} else {
-		queryParameters["regionCode"] = autorest.Encode("query", "FKR")
-	}
+
+	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
 	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
@@ -89,6 +85,7 @@ func (client RouteTableSubnetClient) AddPreparer(ctx context.Context, vpcNo stri
 	if err != nil {
 		return nil, err
 	}
+
 	preparer := autorest.CreatePreparer(
 		autorest.AsPost(),
 		autorest.WithBaseURL(client.BaseURI),
@@ -108,7 +105,7 @@ func (client RouteTableSubnetClient) AddSender(req *http.Request) (*http.Respons
 
 // AddResponder handles the response to the Add request. The method always
 // closes the http.Response Body.
-func (client RouteTableSubnetClient) AddResponder(resp *http.Response) (result RouteTableSubnetResponse, err error) {
+func (client RouteTableSubnetClient) AddResponder(resp *http.Response) (result RouteTableSubnetAddResponse, err error) {
 	err = autorest.Respond(
 		resp,
 		azure.WithErrorUnlessStatusCode(http.StatusOK),
@@ -121,8 +118,7 @@ func (client RouteTableSubnetClient) AddResponder(resp *http.Response) (result R
 // GetList 라우트 테이블에 연관된 서브넷 리스트를 조회
 // Parameters:
 // routeTableNo - 라우트 테이블 번호
-// regionCode - REGION 코드
-func (client RouteTableSubnetClient) GetList(ctx context.Context, routeTableNo string, regionCode string) (result RouteTableSubnetListResponse, err error) {
+func (client RouteTableSubnetClient) GetList(ctx context.Context, routeTableNo string) (result RouteTableSubnetListResponse, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/RouteTableSubnetClient.GetList")
 		defer func() {
@@ -133,7 +129,7 @@ func (client RouteTableSubnetClient) GetList(ctx context.Context, routeTableNo s
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	req, err := client.GetListPreparer(ctx, routeTableNo, regionCode)
+	req, err := client.GetListPreparer(ctx, routeTableNo)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "vpc.RouteTableSubnetClient", "GetList", nil, "Failure preparing request")
 		return
@@ -155,16 +151,13 @@ func (client RouteTableSubnetClient) GetList(ctx context.Context, routeTableNo s
 }
 
 // GetListPreparer prepares the GetList request.
-func (client RouteTableSubnetClient) GetListPreparer(ctx context.Context, routeTableNo string, regionCode string) (*http.Request, error) {
+func (client RouteTableSubnetClient) GetListPreparer(ctx context.Context, routeTableNo string) (*http.Request, error) {
 	queryParameters := map[string]interface{}{
 		"responseFormatType": autorest.Encode("query", "json"),
 		"routeTableNo":       autorest.Encode("query", routeTableNo),
 	}
-	if len(regionCode) > 0 {
-		queryParameters["regionCode"] = autorest.Encode("query", regionCode)
-	} else {
-		queryParameters["regionCode"] = autorest.Encode("query", "FKR")
-	}
+
+	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
 	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
@@ -172,6 +165,7 @@ func (client RouteTableSubnetClient) GetListPreparer(ctx context.Context, routeT
 	if err != nil {
 		return nil, err
 	}
+
 	preparer := autorest.CreatePreparer(
 		autorest.AsGet(),
 		autorest.WithBaseURL(client.BaseURI),
@@ -206,8 +200,7 @@ func (client RouteTableSubnetClient) GetListResponder(resp *http.Response) (resu
 // vpcNo - VPC 번호
 // routeTableNo - 라우트 테이블 번호
 // subnetNoListN - 서브넷 번호 리스트
-// regionCode - REGION 코드
-func (client RouteTableSubnetClient) Remove(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string, regionCode string) (result RouteTableSubnetResponse, err error) {
+func (client RouteTableSubnetClient) Remove(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string) (result RouteTableSubnetRemoveResponse, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/RouteTableSubnetClient.Remove")
 		defer func() {
@@ -218,7 +211,7 @@ func (client RouteTableSubnetClient) Remove(ctx context.Context, vpcNo string, r
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	req, err := client.RemovePreparer(ctx, vpcNo, routeTableNo, subnetNoListN, regionCode)
+	req, err := client.RemovePreparer(ctx, vpcNo, routeTableNo, subnetNoListN)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "vpc.RouteTableSubnetClient", "Remove", nil, "Failure preparing request")
 		return
@@ -240,18 +233,15 @@ func (client RouteTableSubnetClient) Remove(ctx context.Context, vpcNo string, r
 }
 
 // RemovePreparer prepares the Remove request.
-func (client RouteTableSubnetClient) RemovePreparer(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string, regionCode string) (*http.Request, error) {
+func (client RouteTableSubnetClient) RemovePreparer(ctx context.Context, vpcNo string, routeTableNo string, subnetNoListN string) (*http.Request, error) {
 	queryParameters := map[string]interface{}{
 		"responseFormatType": autorest.Encode("query", "json"),
 		"routeTableNo":       autorest.Encode("query", routeTableNo),
 		"subnetNoList.N":     autorest.Encode("query", subnetNoListN),
 		"vpcNo":              autorest.Encode("query", vpcNo),
 	}
-	if len(regionCode) > 0 {
-		queryParameters["regionCode"] = autorest.Encode("query", regionCode)
-	} else {
-		queryParameters["regionCode"] = autorest.Encode("query", "FKR")
-	}
+
+	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
 	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
@@ -259,6 +249,7 @@ func (client RouteTableSubnetClient) RemovePreparer(ctx context.Context, vpcNo s
 	if err != nil {
 		return nil, err
 	}
+
 	preparer := autorest.CreatePreparer(
 		autorest.AsPost(),
 		autorest.WithBaseURL(client.BaseURI),
@@ -278,7 +269,7 @@ func (client RouteTableSubnetClient) RemoveSender(req *http.Request) (*http.Resp
 
 // RemoveResponder handles the response to the Remove request. The method always
 // closes the http.Response Body.
-func (client RouteTableSubnetClient) RemoveResponder(resp *http.Response) (result RouteTableSubnetResponse, err error) {
+func (client RouteTableSubnetClient) RemoveResponder(resp *http.Response) (result RouteTableSubnetRemoveResponse, err error) {
 	err = autorest.Respond(
 		resp,
 		azure.WithErrorUnlessStatusCode(http.StatusOK),

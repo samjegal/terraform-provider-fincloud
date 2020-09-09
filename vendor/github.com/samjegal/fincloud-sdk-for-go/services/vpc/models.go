@@ -9,9 +9,50 @@ import (
 // The package's fully qualified name.
 const fqdn = "github.com/samjegal/fincloud-sdk-for-go/services/vpc"
 
+// CreateResponse ...
+type CreateResponse struct {
+	autorest.Response `json:"-"`
+	CreateVpcResponse *CreateResponseCreateVpcResponse `json:"createVpcResponse,omitempty"`
+}
+
+// CreateResponseCreateVpcResponse ...
+type CreateResponseCreateVpcResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// VpcList - VPC 리스트
+	VpcList *[]List `json:"vpcList,omitempty"`
+}
+
+// DeleteResponse ...
+type DeleteResponse struct {
+	autorest.Response `json:"-"`
+	DeleteVpcResponse *DeleteResponseDeleteVpcResponse `json:"deleteVpcResponse,omitempty"`
+}
+
+// DeleteResponseDeleteVpcResponse ...
+type DeleteResponseDeleteVpcResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// VpcList - VPC 리스트
+	VpcList *[]List `json:"vpcList,omitempty"`
+}
+
 // DetailResponse ...
 type DetailResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response    `json:"-"`
+	GetVpcDetailResponse *DetailResponseGetVpcDetailResponse `json:"getVpcDetailResponse,omitempty"`
+}
+
+// DetailResponseGetVpcDetailResponse ...
+type DetailResponseGetVpcDetailResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -56,8 +97,50 @@ type ListResponseGetVpcListResponse struct {
 	VpcList *[]List `json:"vpcList,omitempty"`
 }
 
+// NatGatewayInstanceCreateResponse ...
+type NatGatewayInstanceCreateResponse struct {
+	autorest.Response                `json:"-"`
+	CreateNatGatewayInstanceResponse *NatGatewayInstanceCreateResponseCreateNatGatewayInstanceResponse `json:"createNatGatewayInstanceResponse,omitempty"`
+}
+
+// NatGatewayInstanceCreateResponseCreateNatGatewayInstanceResponse ...
+type NatGatewayInstanceCreateResponseCreateNatGatewayInstanceResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// NatGatewayInstanceList - NAT 게이트웨이 인스턴스 리스트
+	NatGatewayInstanceList *[]NatGatewayInstanceList `json:"natGatewayInstanceList,omitempty"`
+}
+
+// NatGatewayInstanceDeleteResponse ...
+type NatGatewayInstanceDeleteResponse struct {
+	autorest.Response                `json:"-"`
+	DeleteNatGatewayInstanceResponse *NatGatewayInstanceDeleteResponseDeleteNatGatewayInstanceResponse `json:"deleteNatGatewayInstanceResponse,omitempty"`
+}
+
+// NatGatewayInstanceDeleteResponseDeleteNatGatewayInstanceResponse ...
+type NatGatewayInstanceDeleteResponseDeleteNatGatewayInstanceResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// NatGatewayInstanceList - NAT 게이트웨이 인스턴스 리스트
+	NatGatewayInstanceList *[]NatGatewayInstanceList `json:"natGatewayInstanceList,omitempty"`
+}
+
 // NatGatewayInstanceDetailResponse ...
 type NatGatewayInstanceDetailResponse struct {
+	autorest.Response                   `json:"-"`
+	GetNatGatewayInstanceDetailResponse *NatGatewayInstanceDetailResponseGetNatGatewayInstanceDetailResponse `json:"getNatGatewayInstanceDetailResponse,omitempty"`
+}
+
+// NatGatewayInstanceDetailResponseGetNatGatewayInstanceDetailResponse ...
+type NatGatewayInstanceDetailResponseGetNatGatewayInstanceDetailResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -91,18 +174,12 @@ type NatGatewayInstanceList struct {
 
 // NatGatewayInstanceListResponse ...
 type NatGatewayInstanceListResponse struct {
-	// ReturnCode - 리턴 코드
-	ReturnCode *string `json:"returnCode,omitempty"`
-	// ReturnMessage - 리턴 메시지
-	ReturnMessage *string `json:"returnMessage,omitempty"`
-	// TotalRows - 총 행 개수
-	TotalRows *int32 `json:"totalRows,omitempty"`
-	// NatGatewayInstanceList - NAT 게이트웨이 인스턴스 리스트
-	NatGatewayInstanceList *[]NatGatewayInstanceList `json:"natGatewayInstanceList,omitempty"`
+	autorest.Response                 `json:"-"`
+	GetNatGatewayInstanceListResponse *NatGatewayInstanceListResponseGetNatGatewayInstanceListResponse `json:"getNatGatewayInstanceListResponse,omitempty"`
 }
 
-// NatGatewayInstanceResponse ...
-type NatGatewayInstanceResponse struct {
+// NatGatewayInstanceListResponseGetNatGatewayInstanceListResponse ...
+type NatGatewayInstanceListResponseGetNatGatewayInstanceListResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -121,9 +198,14 @@ type NatGatewayInstanceStatus struct {
 	CodeName *string `json:"codeName,omitempty"`
 }
 
-// NetworkACLDetailResponse ...
-type NetworkACLDetailResponse struct {
-	autorest.Response `json:"-"`
+// NetworkACLCreateResponse ...
+type NetworkACLCreateResponse struct {
+	autorest.Response        `json:"-"`
+	CreateNetworkACLResponse *NetworkACLCreateResponseCreateNetworkACLResponse `json:"createNetworkAclResponse,omitempty"`
+}
+
+// NetworkACLCreateResponseCreateNetworkACLResponse ...
+type NetworkACLCreateResponseCreateNetworkACLResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -134,9 +216,68 @@ type NetworkACLDetailResponse struct {
 	NetworkACLList *[]NetworkACLList `json:"networkAclList,omitempty"`
 }
 
-// NetworkACLInboundRuleResponse ...
-type NetworkACLInboundRuleResponse struct {
-	autorest.Response `json:"-"`
+// NetworkACLDeleteResponse ...
+type NetworkACLDeleteResponse struct {
+	autorest.Response        `json:"-"`
+	DeleteNetworkACLResponse *NetworkACLDeleteResponseDeleteNetworkACLResponse `json:"deleteNetworkAclResponse,omitempty"`
+}
+
+// NetworkACLDeleteResponseDeleteNetworkACLResponse ...
+type NetworkACLDeleteResponseDeleteNetworkACLResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// NetworkACLList - 네트워크 ACL 리스트
+	NetworkACLList *[]NetworkACLList `json:"networkAclList,omitempty"`
+}
+
+// NetworkACLDetailResponse ...
+type NetworkACLDetailResponse struct {
+	autorest.Response           `json:"-"`
+	GetNetworkACLDetailResponse *NetworkACLDetailResponseGetNetworkACLDetailResponse `json:"getNetworkAclDetailResponse,omitempty"`
+}
+
+// NetworkACLDetailResponseGetNetworkACLDetailResponse ...
+type NetworkACLDetailResponseGetNetworkACLDetailResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// NetworkACLList - 네트워크 ACL 리스트
+	NetworkACLList *[]NetworkACLList `json:"networkAclList,omitempty"`
+}
+
+// NetworkACLInboundRuleAddResponse ...
+type NetworkACLInboundRuleAddResponse struct {
+	autorest.Response                `json:"-"`
+	AddNetworkACLInboundRuleResponse *NetworkACLInboundRuleAddResponseAddNetworkACLInboundRuleResponse `json:"addNetworkAclInboundRuleResponse,omitempty"`
+}
+
+// NetworkACLInboundRuleAddResponseAddNetworkACLInboundRuleResponse ...
+type NetworkACLInboundRuleAddResponseAddNetworkACLInboundRuleResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// NetworkACLRuleList - 네트워크 ACL 룰 리스트
+	NetworkACLRuleList *[]NetworkACLRuleList `json:"networkAclRuleList,omitempty"`
+}
+
+// NetworkACLInboundRuleRemoveResponse ...
+type NetworkACLInboundRuleRemoveResponse struct {
+	autorest.Response                   `json:"-"`
+	RemoveNetworkACLInboundRuleResponse *NetworkACLInboundRuleRemoveResponseRemoveNetworkACLInboundRuleResponse `json:"removeNetworkAclInboundRuleResponse,omitempty"`
+}
+
+// NetworkACLInboundRuleRemoveResponseRemoveNetworkACLInboundRuleResponse ...
+type NetworkACLInboundRuleRemoveResponseRemoveNetworkACLInboundRuleResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -167,7 +308,12 @@ type NetworkACLList struct {
 
 // NetworkACLListResponse ...
 type NetworkACLListResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response         `json:"-"`
+	GetNetworkACLListResponse *NetworkACLListResponseGetNetworkACLListResponse `json:"getNetworkAclListResponse,omitempty"`
+}
+
+// NetworkACLListResponseGetNetworkACLListResponse ...
+type NetworkACLListResponseGetNetworkACLListResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -178,9 +324,14 @@ type NetworkACLListResponse struct {
 	NetworkACLList *[]NetworkACLList `json:"networkAclList,omitempty"`
 }
 
-// NetworkACLOutboundRuleResponse ...
-type NetworkACLOutboundRuleResponse struct {
-	autorest.Response `json:"-"`
+// NetworkACLOutboundRuleAddResponse ...
+type NetworkACLOutboundRuleAddResponse struct {
+	autorest.Response                 `json:"-"`
+	AddNetworkACLOutboundRuleResponse *NetworkACLOutboundRuleAddResponseAddNetworkACLOutboundRuleResponse `json:"addNetworkAclOutboundRuleResponse,omitempty"`
+}
+
+// NetworkACLOutboundRuleAddResponseAddNetworkACLOutboundRuleResponse ...
+type NetworkACLOutboundRuleAddResponseAddNetworkACLOutboundRuleResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -191,17 +342,22 @@ type NetworkACLOutboundRuleResponse struct {
 	NetworkACLRuleList *[]NetworkACLRuleList `json:"networkAclRuleList,omitempty"`
 }
 
-// NetworkACLResponse ...
-type NetworkACLResponse struct {
-	autorest.Response `json:"-"`
+// NetworkACLOutboundRuleRemoveResponse ...
+type NetworkACLOutboundRuleRemoveResponse struct {
+	autorest.Response                    `json:"-"`
+	RemoveNetworkACLOutboundRuleResponse *NetworkACLOutboundRuleRemoveResponseRemoveNetworkACLOutboundRuleResponse `json:"removeNetworkAclOutboundRuleResponse,omitempty"`
+}
+
+// NetworkACLOutboundRuleRemoveResponseRemoveNetworkACLOutboundRuleResponse ...
+type NetworkACLOutboundRuleRemoveResponseRemoveNetworkACLOutboundRuleResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
 	ReturnMessage *string `json:"returnMessage,omitempty"`
 	// TotalRows - 총 행 개수
 	TotalRows *int32 `json:"totalRows,omitempty"`
-	// NetworkACLList - 네트워크 ACL 리스트
-	NetworkACLList *[]NetworkACLList `json:"networkAclList,omitempty"`
+	// NetworkACLRuleList - 네트워크 ACL 룰 리스트
+	NetworkACLRuleList *[]NetworkACLRuleList `json:"networkAclRuleList,omitempty"`
 }
 
 // NetworkACLRuleList ...
@@ -228,7 +384,12 @@ type NetworkACLRuleList struct {
 
 // NetworkACLRuleListResponse ...
 type NetworkACLRuleListResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response             `json:"-"`
+	GetNetworkACLRuleListResponse *NetworkACLRuleListResponseGetNetworkACLRuleListResponse `json:"getNetworkAclRuleListResponse,omitempty"`
+}
+
+// NetworkACLRuleListResponseGetNetworkACLRuleListResponse ...
+type NetworkACLRuleListResponseGetNetworkACLRuleListResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -255,8 +416,68 @@ type NetworkACLStatus struct {
 	CodeName *string `json:"codeName,omitempty"`
 }
 
+// PeeringInstanceAcceptOrRejectResponse ...
+type PeeringInstanceAcceptOrRejectResponse struct {
+	autorest.Response                `json:"-"`
+	AcceptOrRejectVpcPeeringResponse *PeeringInstanceAcceptOrRejectResponseAcceptOrRejectVpcPeeringResponse `json:"acceptOrRejectVpcPeeringResponse,omitempty"`
+}
+
+// PeeringInstanceAcceptOrRejectResponseAcceptOrRejectVpcPeeringResponse ...
+type PeeringInstanceAcceptOrRejectResponseAcceptOrRejectVpcPeeringResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// VpcPeeringInstanceList - VPC 피어링 인스턴스 리스트
+	VpcPeeringInstanceList *[]PeeringInstanceList `json:"VpcPeeringInstanceList,omitempty"`
+}
+
+// PeeringInstanceCreateResponse ...
+type PeeringInstanceCreateResponse struct {
+	autorest.Response                `json:"-"`
+	CreateVpcPeeringInstanceResponse *PeeringInstanceCreateResponseCreateVpcPeeringInstanceResponse `json:"createVpcPeeringInstanceResponse,omitempty"`
+}
+
+// PeeringInstanceCreateResponseCreateVpcPeeringInstanceResponse ...
+type PeeringInstanceCreateResponseCreateVpcPeeringInstanceResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// VpcPeeringInstanceList - VPC 피어링 인스턴스 리스트
+	VpcPeeringInstanceList *[]PeeringInstanceList `json:"VpcPeeringInstanceList,omitempty"`
+}
+
+// PeeringInstanceDeleteResponse ...
+type PeeringInstanceDeleteResponse struct {
+	autorest.Response                `json:"-"`
+	DeleteVpcPeeringInstanceResponse *PeeringInstanceDeleteResponseDeleteVpcPeeringInstanceResponse `json:"deleteVpcPeeringInstanceResponse,omitempty"`
+}
+
+// PeeringInstanceDeleteResponseDeleteVpcPeeringInstanceResponse ...
+type PeeringInstanceDeleteResponseDeleteVpcPeeringInstanceResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// VpcPeeringInstanceList - VPC 피어링 인스턴스 리스트
+	VpcPeeringInstanceList *[]PeeringInstanceList `json:"VpcPeeringInstanceList,omitempty"`
+}
+
 // PeeringInstanceDetailResponse ...
 type PeeringInstanceDetailResponse struct {
+	autorest.Response                   `json:"-"`
+	GetVpcPeeringInstanceDetailResponse *PeeringInstanceDetailResponseGetVpcPeeringInstanceDetailResponse `json:"getVpcPeeringInstanceDetailResponse,omitempty"`
+}
+
+// PeeringInstanceDetailResponseGetVpcPeeringInstanceDetailResponse ...
+type PeeringInstanceDetailResponseGetVpcPeeringInstanceDetailResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -310,19 +531,12 @@ type PeeringInstanceList struct {
 
 // PeeringInstanceListResponse ...
 type PeeringInstanceListResponse struct {
-	// ReturnCode - 리턴 코드
-	ReturnCode *string `json:"returnCode,omitempty"`
-	// ReturnMessage - 리턴 메시지
-	ReturnMessage *string `json:"returnMessage,omitempty"`
-	// TotalRows - 총 행 개수
-	TotalRows *int32 `json:"totalRows,omitempty"`
-	// VpcPeeringInstanceList - VPC 피어링 인스턴스 리스트
-	VpcPeeringInstanceList *[]PeeringInstanceList `json:"VpcPeeringInstanceList,omitempty"`
+	autorest.Response                 `json:"-"`
+	GetVpcPeeringInstanceListResponse *PeeringInstanceListResponseGetVpcPeeringInstanceListResponse `json:"getVpcPeeringInstanceListResponse,omitempty"`
 }
 
-// PeeringInstanceResponse ...
-type PeeringInstanceResponse struct {
-	autorest.Response `json:"-"`
+// PeeringInstanceListResponseGetVpcPeeringInstanceListResponse ...
+type PeeringInstanceListResponseGetVpcPeeringInstanceListResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -361,17 +575,22 @@ type ProtocolType struct {
 	CodeName *string `json:"codeName,omitempty"`
 }
 
-// Response ...
-type Response struct {
+// RouteAddResponse ...
+type RouteAddResponse struct {
 	autorest.Response `json:"-"`
+	AddRouteResponse  *RouteAddResponseAddRouteResponse `json:"addRouteResponse,omitempty"`
+}
+
+// RouteAddResponseAddRouteResponse ...
+type RouteAddResponseAddRouteResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
 	ReturnMessage *string `json:"returnMessage,omitempty"`
 	// TotalRows - 총 행 개수
 	TotalRows *int32 `json:"totalRows,omitempty"`
-	// VpcList - VPC 리스트
-	VpcList *[]List `json:"vpcList,omitempty"`
+	// RouteList - 라우트 리스트
+	RouteList *[]RouteList `json:"routeList,omitempty"`
 }
 
 // RouteList ...
@@ -392,7 +611,12 @@ type RouteList struct {
 
 // RouteListResponse ...
 type RouteListResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response    `json:"-"`
+	GetRouteListResponse *RouteListResponseGetRouteListResponse `json:"getRouteListResponse,omitempty"`
+}
+
+// RouteListResponseGetRouteListResponse ...
+type RouteListResponseGetRouteListResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -403,9 +627,14 @@ type RouteListResponse struct {
 	RouteList *[]RouteList `json:"routeList,omitempty"`
 }
 
-// RouteResponse ...
-type RouteResponse struct {
-	autorest.Response `json:"-"`
+// RouteRemoveResponse ...
+type RouteRemoveResponse struct {
+	autorest.Response   `json:"-"`
+	RemoveRouteResponse *RouteRemoveResponseRemoveRouteResponse `json:"removeRouteResponse,omitempty"`
+}
+
+// RouteRemoveResponseRemoveRouteResponse ...
+type RouteRemoveResponseRemoveRouteResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -414,11 +643,52 @@ type RouteResponse struct {
 	TotalRows *int32 `json:"totalRows,omitempty"`
 	// RouteList - 라우트 리스트
 	RouteList *[]RouteList `json:"routeList,omitempty"`
+}
+
+// RouteTableCreateResponse ...
+type RouteTableCreateResponse struct {
+	autorest.Response        `json:"-"`
+	CreateRouteTableResponse *RouteTableCreateResponseCreateRouteTableResponse `json:"createRouteTableResponse,omitempty"`
+}
+
+// RouteTableCreateResponseCreateRouteTableResponse ...
+type RouteTableCreateResponseCreateRouteTableResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// RouteTableList - 라우트 테이블 리스트
+	RouteTableList *[]RouteTableList `json:"routeTableList,omitempty"`
+}
+
+// RouteTableDeleteResponse ...
+type RouteTableDeleteResponse struct {
+	autorest.Response        `json:"-"`
+	DeleteRouteTableResponse *RouteTableDeleteResponseDeleteRouteTableResponse `json:"deleteRouteTableResponse,omitempty"`
+}
+
+// RouteTableDeleteResponseDeleteRouteTableResponse ...
+type RouteTableDeleteResponseDeleteRouteTableResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// RouteTableList - 라우트 테이블 리스트
+	RouteTableList *[]RouteTableList `json:"routeTableList,omitempty"`
 }
 
 // RouteTableDetailResponse ...
 type RouteTableDetailResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response           `json:"-"`
+	GetRouteTableDetailResponse *RouteTableDetailResponseGetRouteTableDetailResponse `json:"getRouteTableDetailResponse,omitempty"`
+}
+
+// RouteTableDetailResponseGetRouteTableDetailResponse ...
+type RouteTableDetailResponseGetRouteTableDetailResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -451,20 +721,12 @@ type RouteTableList struct {
 
 // RouteTableListResponse ...
 type RouteTableListResponse struct {
-	autorest.Response `json:"-"`
-	// ReturnCode - 리턴 코드
-	ReturnCode *string `json:"returnCode,omitempty"`
-	// ReturnMessage - 리턴 메시지
-	ReturnMessage *string `json:"returnMessage,omitempty"`
-	// TotalRows - 총 행 개수
-	TotalRows *int32 `json:"totalRows,omitempty"`
-	// RouteTableList - 라우트 테이블 리스트
-	RouteTableList *[]RouteTableList `json:"routeTableList,omitempty"`
+	autorest.Response         `json:"-"`
+	GetRouteTableListResponse *RouteTableListResponseGetRouteTableListResponse `json:"getRouteTableListResponse,omitempty"`
 }
 
-// RouteTableResponse ...
-type RouteTableResponse struct {
-	autorest.Response `json:"-"`
+// RouteTableListResponseGetRouteTableListResponse ...
+type RouteTableListResponseGetRouteTableListResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -483,9 +745,14 @@ type RouteTableStatus struct {
 	CodeName *string `json:"codeName,omitempty"`
 }
 
-// RouteTableSubnetListResponse ...
-type RouteTableSubnetListResponse struct {
-	autorest.Response `json:"-"`
+// RouteTableSubnetAddResponse ...
+type RouteTableSubnetAddResponse struct {
+	autorest.Response           `json:"-"`
+	AddRouteTableSubnetResponse *RouteTableSubnetAddResponseAddRouteTableSubnetResponse `json:"addRouteTableSubnetResponse,omitempty"`
+}
+
+// RouteTableSubnetAddResponseAddRouteTableSubnetResponse ...
+type RouteTableSubnetAddResponseAddRouteTableSubnetResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -496,9 +763,32 @@ type RouteTableSubnetListResponse struct {
 	SubnetList *[]SubnetList `json:"subnetList,omitempty"`
 }
 
-// RouteTableSubnetResponse ...
-type RouteTableSubnetResponse struct {
-	autorest.Response `json:"-"`
+// RouteTableSubnetListResponse ...
+type RouteTableSubnetListResponse struct {
+	autorest.Response               `json:"-"`
+	GetRouteTableSubnetListResponse *RouteTableSubnetListResponseGetRouteTableSubnetListResponse `json:"getRouteTableSubnetListResponse,omitempty"`
+}
+
+// RouteTableSubnetListResponseGetRouteTableSubnetListResponse ...
+type RouteTableSubnetListResponseGetRouteTableSubnetListResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// SubnetList - 서브넷 리스트
+	SubnetList *[]SubnetList `json:"subnetList,omitempty"`
+}
+
+// RouteTableSubnetRemoveResponse ...
+type RouteTableSubnetRemoveResponse struct {
+	autorest.Response              `json:"-"`
+	RemoveRouteTableSubnetResponse *RouteTableSubnetRemoveResponseRemoveRouteTableSubnetResponse `json:"removeRouteTableSubnetResponse,omitempty"`
+}
+
+// RouteTableSubnetRemoveResponseRemoveRouteTableSubnetResponse ...
+type RouteTableSubnetRemoveResponseRemoveRouteTableSubnetResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -525,9 +815,50 @@ type Status struct {
 	CodeName *string `json:"codeName,omitempty"`
 }
 
+// SubnetCreateResponse ...
+type SubnetCreateResponse struct {
+	autorest.Response    `json:"-"`
+	CreateSubnetResponse *SubnetCreateResponseCreateSubnetResponse `json:"createSubnetResponse,omitempty"`
+}
+
+// SubnetCreateResponseCreateSubnetResponse ...
+type SubnetCreateResponseCreateSubnetResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// SubnetList - 서브넷 리스트
+	SubnetList *[]SubnetList `json:"subnetList,omitempty"`
+}
+
+// SubnetDeleteResponse ...
+type SubnetDeleteResponse struct {
+	autorest.Response    `json:"-"`
+	DeleteSubnetResponse *SubnetDeleteResponseDeleteSubnetResponse `json:"deleteSubnetResponse,omitempty"`
+}
+
+// SubnetDeleteResponseDeleteSubnetResponse ...
+type SubnetDeleteResponseDeleteSubnetResponse struct {
+	// ReturnCode - 리턴 코드
+	ReturnCode *string `json:"returnCode,omitempty"`
+	// ReturnMessage - 리턴 메시지
+	ReturnMessage *string `json:"returnMessage,omitempty"`
+	// TotalRows - 총 행 개수
+	TotalRows *int32 `json:"totalRows,omitempty"`
+	// SubnetList - 서브넷 리스트
+	SubnetList *[]SubnetList `json:"subnetList,omitempty"`
+}
+
 // SubnetDetailResponse ...
 type SubnetDetailResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response       `json:"-"`
+	GetSubnetDetailResponse *SubnetDetailResponseGetSubnetDetailResponse `json:"getSubnetDetailResponse,omitempty"`
+}
+
+// SubnetDetailResponseGetSubnetDetailResponse ...
+type SubnetDetailResponseGetSubnetDetailResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -558,7 +889,12 @@ type SubnetList struct {
 
 // SubnetListResponse ...
 type SubnetListResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response     `json:"-"`
+	GetSubnetListResponse *SubnetListResponseGetSubnetListResponse `json:"getSubnetListResponse,omitempty"`
+}
+
+// SubnetListResponseGetSubnetListResponse ...
+type SubnetListResponseGetSubnetListResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -571,7 +907,12 @@ type SubnetListResponse struct {
 
 // SubnetNetworkACLResponse ...
 type SubnetNetworkACLResponse struct {
-	autorest.Response `json:"-"`
+	autorest.Response           `json:"-"`
+	SetSubnetNetworkACLResponse *SubnetNetworkACLResponseSetSubnetNetworkACLResponse `json:"setSubnetNetworkAclResponse,omitempty"`
+}
+
+// SubnetNetworkACLResponseSetSubnetNetworkACLResponse ...
+type SubnetNetworkACLResponseSetSubnetNetworkACLResponse struct {
 	// ReturnCode - 리턴 코드
 	ReturnCode *string `json:"returnCode,omitempty"`
 	// ReturnMessage - 리턴 메시지
@@ -580,19 +921,6 @@ type SubnetNetworkACLResponse struct {
 	TotalRows *int32 `json:"totalRows,omitempty"`
 	// NetworkACLList - 네트워크 ACL 리스트
 	NetworkACLList *[]NetworkACLList `json:"networkAclList,omitempty"`
-}
-
-// SubnetResponse ...
-type SubnetResponse struct {
-	autorest.Response `json:"-"`
-	// ReturnCode - 리턴 코드
-	ReturnCode *string `json:"returnCode,omitempty"`
-	// ReturnMessage - 리턴 메시지
-	ReturnMessage *string `json:"returnMessage,omitempty"`
-	// TotalRows - 총 행 개수
-	TotalRows *int32 `json:"totalRows,omitempty"`
-	// SubnetList - 서브넷 리스트
-	SubnetList *[]SubnetList `json:"subnetList,omitempty"`
 }
 
 // SubnetStatus ...
