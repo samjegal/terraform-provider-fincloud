@@ -64,7 +64,7 @@ func fincloudProvider() terraform.ResourceProvider {
 				Description: "금융 클라우드 홈페이지를 로그인 성공했을 때 나오는 ncp 쿠키 값",
 			},
 
-			"access_key_id": {
+			"access_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("FINCLOUD_ACCESS_KEY_ID", ""),
@@ -116,8 +116,8 @@ func providerConfigure(p *schema.Provider) schema.ConfigureFunc {
 			CertTokenPath: d.Get("cert_token_path").(string),
 
 			// API GW를 사용하기 위한 KEY 값 설정
-			AccessKeyId: d.Get("access_key_id").(string),
-			SecretKey:   d.Get("secret_key").(string),
+			AccessKey: d.Get("access_key").(string),
+			SecretKey: d.Get("secret_key").(string),
 
 			// 계정 정보를 이용해 접속하기 위한 기본 값 설정
 			Subaccount: d.Get("subaccount").(string),

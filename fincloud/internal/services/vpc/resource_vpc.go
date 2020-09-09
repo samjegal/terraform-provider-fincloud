@@ -1,6 +1,4 @@
-//Deprecated: this file not used console api version
-
-package network
+package vpc
 
 import (
 	"fmt"
@@ -8,21 +6,19 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/samjegal/fincloud-sdk-for-go/services/network"
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/helpers/validate"
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/clients"
 	"github.com/samjegal/terraform-provider-fincloud/fincloud/internal/timeouts"
-	"github.com/samjegal/terraform-provider-fincloud/fincloud/utils"
 )
 
-var virtualPrivateCloudResourceName = "fincloud_virtual_private_cloud"
+var vpcResourceName = "fincloud_vpc"
 
-func resourceVirtualPrivateCloud() *schema.Resource {
+func resourceVpc() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceVirtualPrivateCloudCreate,
-		Read:   resourceVirtualPrivateCloudRead,
-		Update: resourceVirtualPrivateCloudUpdate,
-		Delete: resourceVirtualPrivateCloudDelete,
+		Create: resourceVpcCreate,
+		Read:   resourceVpcRead,
+		Update: resourceVpcUpdate,
+		Delete: resourceVpcDelete,
 
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -58,23 +54,32 @@ func resourceVirtualPrivateCloud() *schema.Resource {
 	}
 }
 
-func resourceVirtualPrivateCloudCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceVpcCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client)
 	ctx, cancel := timeouts.ForCreateUpdate(meta.(*clients.Client).StopContext, d)
 	defer cancel()
-	vpcClient := client.Network.VirtualPrivateCloudClient
+	vpcClient := client.Vpc.Client
 
 	vpcName := d.Get("name").(string)
-	param := expandVirtualPrivateCloud(d)
-	_, err := vpcClient.CreateOrUpdate(ctx, param)
+	cidrBlock := d.Get("cidr_block").(string)
+
+	resp, err := vpcClient.Create(ctx, cidrBlock, vpcName)
 	if err != nil {
 		return fmt.Errorf("")
 	}
 
+	if *resp.CreateVpcResponse.ReturnCode != "0" {
+		return nil // ERROR!
+	}
+
+	var vpcID string
+	vpc := (*resp.CreateVpcResponse.VpcList)[0]
+	vpcID = *vpc.VpcNo
+
 	stateConf := &resource.StateChangeConf{
 		Pending:    []string{"INIT", "CREATING"},
 		Target:     []string{"RUN"},
-		Refresh:    virtualPrivateCloudStateRefreshFunc(client, vpcName),
+		Refresh:    vpcStateRefreshFunc(client, vpcID),
 		Timeout:    30 * time.Minute,
 		MinTimeout: 15 * time.Second,
 	}
@@ -82,73 +87,67 @@ func resourceVirtualPrivateCloudCreate(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("상세정보의 상태 코드를 가져오는 중 문제가 발생했다. VPC: %q", vpcName)
 	}
 
-	return resourceVirtualPrivateCloudRead(d, meta)
+	d.SetId(*vpc.VpcNo)
+
+	return resourceVpcRead(d, meta)
 }
 
-func resourceVirtualPrivateCloudRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*clients.Client).Network.VirtualPrivateCloudClient
+func resourceVpcRead(d *schema.ResourceData, meta interface{}) error {
+	client := meta.(*clients.Client)
 	ctx, cancel := timeouts.ForRead(meta.(*clients.Client).StopContext, d)
 	defer cancel()
+	vpcClient := client.Vpc.Client
 
+	vpcID := d.Id()
 	vpcName := d.Get("name").(string)
 
-	resp, err := client.List(ctx)
+	resp, err := vpcClient.GetDetail(ctx, vpcID)
 	if err != nil {
 		return fmt.Errorf("VPC 정보의 요청에 문제가 발생했습니다. vpcName: %q: %+v", vpcName, err)
 	}
 
-	var props *network.VirtualPrivateCloudContentParameter
-	for _, v := range *resp.Content {
-		if vpcName == *v.VpcName {
-			props = &v
-			break
-		}
-	}
-
-	if props != nil {
-		if err := d.Set("name", *props.VpcName); err != nil {
+	vpc := resp.GetVpcDetailResponse.VpcList
+	if vpc != nil {
+		if err := d.Set("name", (*vpc)[0].VpcName); err != nil {
 			return fmt.Errorf("VPC 이름 값을 설정하는 중 에러가 발생했습니다. err: %+v", err)
 		}
 
-		if err := d.Set("cidr_block", *props.Ipv4Cidr); err != nil {
+		if err := d.Set("cidr_block", (*vpc)[0].Ipv4CidrBlock); err != nil {
 			return fmt.Errorf("VPC 이름 값을 설정하는 중 에러가 발생했습니다. err: %+v", err)
 		}
 
-		if err := d.Set("status_code", string(props.StatusCode)); err != nil {
+		if err := d.Set("status_code", string(*(*vpc)[0].VpcStatus.Code)); err != nil {
 			return fmt.Errorf("VPC 이름 값을 설정하는 중 에러가 발생했습니다. err: %+v", err)
 		}
-
-		d.SetId(*props.VpcNo)
 	}
 
 	return nil
 }
 
-func resourceVirtualPrivateCloudUpdate(d *schema.ResourceData, meta interface{}) error {
-	// FIXME: 금융 클라우드에서 구현되지 않은 상태이다.
+func resourceVpcUpdate(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func resourceVirtualPrivateCloudDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceVpcDelete(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*clients.Client)
 	ctx, cancel := timeouts.ForDelete(meta.(*clients.Client).StopContext, d)
 	defer cancel()
-	vpcClient := client.Network.VirtualPrivateCloudClient
+	vpcClient := client.Vpc.Client
 
-	vpcNo := d.Id()
+	vpcID := d.Id()
 	vpcName := d.Get("name").(string)
 
-	_, err := vpcClient.Delete(ctx, vpcNo, expandVirtualPrivateCloud(d))
+	_, err := vpcClient.Delete(ctx, vpcID)
 	if err != nil {
 		return fmt.Errorf("VPC 삭제 요청에 대한 문제가 발생했습니다. err: %s", err)
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"INIT", "CREATING", "TERMTING"},
+		Pending:    []string{"INIT", "CREATING", "TERMTING", "RUN"},
 		Target:     []string{"NOTFOUND"},
-		Refresh:    virtualPrivateCloudStateRefreshFunc(client, vpcName),
+		Refresh:    vpcStateRefreshFunc(client, vpcID),
 		Timeout:    30 * time.Minute,
-		MinTimeout: 10 * time.Second,
+		MinTimeout: 15 * time.Second,
 	}
 	if _, err := stateConf.WaitForState(); err != nil {
 		return fmt.Errorf("VPC 삭제 중 문제가 발생했습니다. vpcName: %s", vpcName)
@@ -158,31 +157,22 @@ func resourceVirtualPrivateCloudDelete(d *schema.ResourceData, meta interface{})
 	return nil
 }
 
-func expandVirtualPrivateCloud(d *schema.ResourceData) network.VirtualPrivateCloudParameter {
-	vpcName := d.Get("name").(string)
-	cidrBlock := d.Get("cidr_block").(string)
-
-	return network.VirtualPrivateCloudParameter{
-		VpcName:  utils.String(vpcName),
-		Ipv4Cidr: utils.String(cidrBlock),
-	}
-}
-
-func virtualPrivateCloudStateRefreshFunc(client *clients.Client, vpcName string) resource.StateRefreshFunc {
+func vpcStateRefreshFunc(client *clients.Client, vpcID string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
+		vpcClient := client.Vpc.Client
 		ctx := client.StopContext
-		resp, err := client.Network.VirtualPrivateCloudClient.List(ctx)
+		resp, err := vpcClient.GetDetail(ctx, vpcID)
 		if err != nil {
-			return nil, "NOTFOUND", fmt.Errorf("해당하는 정보가 존재하지 않습니다. VPC: %q: %+v", vpcName, err)
+			return nil, "NOTFOUND", fmt.Errorf("해당하는 정보가 존재하지 않습니다. VPC: %q: %+v", vpcID, err)
 		}
 
-		if resp.Content == nil {
-			return nil, "EMPTY", fmt.Errorf("VPC 정보가 존재하지 않습니다. VPC: %q: %+v", vpcName, err)
+		if resp.GetVpcDetailResponse == nil {
+			return nil, "EMPTY", fmt.Errorf("VPC 정보가 존재하지 않습니다. VPC: %q: %+v", vpcID, err)
 		}
 
-		for _, v := range *resp.Content {
-			if vpcName == *v.VpcName {
-				return v, string(network.VirtualPrivateCloudStatusCode(v.StatusCode)), nil
+		for _, v := range *resp.GetVpcDetailResponse.VpcList {
+			if vpcID == *v.VpcNo {
+				return v, string(*v.VpcStatus.Code), nil
 			}
 		}
 
