@@ -20,7 +20,8 @@ type Client struct {
 	Network  *network.Client
 	Location *location.Client
 	SslVpn   *sslvpn.Client
-	Vpc      *vpc.Client
+
+	Vpc *vpc.Client
 }
 
 func (client *Client) Build(ctx context.Context, o *common.ClientOptions) error {

@@ -6,14 +6,19 @@ import (
 )
 
 type Client struct {
-	Client *vpc.Client
+	VpcClient        *vpc.Client
+	NetworkACLClient *vpc.NetworkACLClient
 }
 
 func NewClent(o *common.ClientOptions) *Client {
 	VpcClient := vpc.NewClient()
 	o.ConfigureClient(&VpcClient.Client, o.ResourceManagerAuthorizer)
 
+	NetworkACLClient := vpc.NewNetworkACLClient()
+	o.ConfigureClient(&NetworkACLClient.Client, o.ResourceManagerAuthorizer)
+
 	return &Client{
-		Client: &VpcClient,
+		VpcClient:        &VpcClient,
+		NetworkACLClient: &NetworkACLClient,
 	}
 }
