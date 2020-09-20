@@ -184,12 +184,6 @@ type Client struct {
 	// This can be used to specify things like a custom retry SendDecorator.
 	// Set this to an empty slice to use no SendDecorators.
 	SendDecorators []SendDecorator
-
-	AccessKey string
-	Secretkey string
-
-	// APIGatewayAPIKey can control user access by using API Key and IP ACL issued by API Gateway. The API can be protected by using the same user authentication as the own API provided by Naver Cloud Platform.
-	APIGatewayAPIKey string
 }
 
 // NewClientWithUserAgent returns an instance of a Client with the UserAgent set to the passed

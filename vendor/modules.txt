@@ -8,11 +8,11 @@ cloud.google.com/go/internal/version
 cloud.google.com/go/storage
 # github.com/Azure/go-autorest v14.2.0+incompatible
 github.com/Azure/go-autorest
-# github.com/Azure/go-autorest/autorest v0.11.4 => github.com/samjegal/go-autorest/autorest v0.11.5-0.20200906111652-5e286818fa7f
+# github.com/Azure/go-autorest/autorest v0.11.6
 ## explicit
 github.com/Azure/go-autorest/autorest
 github.com/Azure/go-autorest/autorest/azure
-# github.com/Azure/go-autorest/autorest/adal v0.9.2
+# github.com/Azure/go-autorest/autorest/adal v0.9.4
 github.com/Azure/go-autorest/autorest/adal
 # github.com/Azure/go-autorest/autorest/date v0.3.0
 github.com/Azure/go-autorest/autorest/date
@@ -304,8 +304,9 @@ github.com/posener/complete
 github.com/posener/complete/cmd
 github.com/posener/complete/cmd/install
 github.com/posener/complete/match
-# github.com/samjegal/fincloud-sdk-for-go v1.9.2
+# github.com/samjegal/fincloud-sdk-for-go v1.9.6-0.20200914045106-be9f55ea73c4
 ## explicit
+github.com/samjegal/fincloud-sdk-for-go/common
 github.com/samjegal/fincloud-sdk-for-go/profiles/compute
 github.com/samjegal/fincloud-sdk-for-go/profiles/network
 github.com/samjegal/fincloud-sdk-for-go/profiles/sslvpn
@@ -482,4 +483,3 @@ google.golang.org/grpc/tap
 google.golang.org/grpc/test/bufconn
 # gopkg.in/yaml.v2 v2.3.0
 gopkg.in/yaml.v2
-# github.com/Azure/go-autorest/autorest => github.com/samjegal/go-autorest/autorest v0.11.5-0.20200906111652-5e286818fa7f

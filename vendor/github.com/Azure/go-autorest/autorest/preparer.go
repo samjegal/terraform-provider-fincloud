@@ -25,7 +25,6 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"regexp"
 	"strings"
 )
 
@@ -548,25 +547,4 @@ func WithQueryParameters(queryParameters map[string]interface{}) PrepareDecorato
 			return r, err
 		})
 	}
-}
-
-func GetQuery(queryParameters map[string]interface{}) string {
-	parameters := MapToValues(queryParameters)
-	v := make(url.Values, 0)
-	for key, value := range parameters {
-		for i := range value {
-			d, err := url.QueryUnescape(value[i])
-			if err != nil {
-				return ""
-			}
-			value[i] = d
-		}
-		v[key] = value
-	}
-	return v.Encode()
-}
-
-func GetPath(baseUrl string, url string) string {
-	r := regexp.MustCompile("https://[^{}/ :\\\\]+(?::\\d+)?")
-	return r.ReplaceAllString(baseUrl, "") + url
 }

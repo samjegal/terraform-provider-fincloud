@@ -18,11 +18,20 @@ const (
 type BaseClient struct {
 	autorest.Client
 	BaseURI string
+
+	AccessKey string
+	Secretkey string
+
+	APIGatewayAPIKey string
 }
 
 // New creates an instance of the BaseClient client.
 func New() BaseClient {
 	return NewWithBaseURI(DefaultBaseURI)
+}
+
+func NewWithKey(accessKey string, secretKey string) BaseClient {
+	return NewWithBaseURIWithKey(DefaultBaseURI, accessKey, secretKey)
 }
 
 // NewWithBaseURI creates an instance of the BaseClient client using a custom endpoint.  Use this when interacting with
@@ -31,5 +40,14 @@ func NewWithBaseURI(baseURI string) BaseClient {
 	return BaseClient{
 		Client:  autorest.NewClientWithUserAgent(UserAgent()),
 		BaseURI: baseURI,
+	}
+}
+
+func NewWithBaseURIWithKey(baseURI string, accessKey string, secretKey string) BaseClient {
+	return BaseClient{
+		Client:    autorest.NewClientWithUserAgent(UserAgent()),
+		BaseURI:   baseURI,
+		AccessKey: accessKey,
+		Secretkey: secretKey,
 	}
 }

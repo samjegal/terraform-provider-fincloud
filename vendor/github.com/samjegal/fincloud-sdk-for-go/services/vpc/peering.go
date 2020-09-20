@@ -8,6 +8,7 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/tracing"
+	"github.com/samjegal/fincloud-sdk-for-go/common"
 	"github.com/samjegal/go-fincloud-helpers/security"
 	"net/http"
 	"strconv"
@@ -24,10 +25,18 @@ func NewPeeringClient() PeeringClient {
 	return NewPeeringClientWithBaseURI(DefaultBaseURI)
 }
 
+func NewPeeringClientWithKey(accessKey string, secretKey string) PeeringClient {
+	return NewPeeringClientWithBaseURIWithKey(DefaultBaseURI, accessKey, secretKey)
+}
+
 // NewPeeringClientWithBaseURI creates an instance of the PeeringClient client using a custom endpoint.  Use this when
 // interacting with an Azure cloud that uses a non-standard base URI (sovereign clouds, Azure stack).
 func NewPeeringClientWithBaseURI(baseURI string) PeeringClient {
 	return PeeringClient{NewWithBaseURI(baseURI)}
+}
+
+func NewPeeringClientWithBaseURIWithKey(baseURI string, accessKey string, secretKey string) PeeringClient {
+	return PeeringClient{NewWithBaseURIWithKey(baseURI, accessKey, secretKey)}
 }
 
 // AcceptOrReject VPC Peering 요청을 수락/거절
@@ -77,8 +86,8 @@ func (client PeeringClient) AcceptOrRejectPreparer(ctx context.Context, vpcPeeri
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/acceptOrRejectVpcPeering")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/acceptOrRejectVpcPeering")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +98,7 @@ func (client PeeringClient) AcceptOrRejectPreparer(ctx context.Context, vpcPeeri
 		autorest.WithPath("/acceptOrRejectVpcPeering"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -176,8 +185,8 @@ func (client PeeringClient) CreatePreparer(ctx context.Context, sourceVpcNo stri
 	}
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/createVpcPeeringInstance")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/createVpcPeeringInstance")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +197,7 @@ func (client PeeringClient) CreatePreparer(ctx context.Context, sourceVpcNo stri
 		autorest.WithPath("/createVpcPeeringInstance"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -256,8 +265,8 @@ func (client PeeringClient) DeletePreparer(ctx context.Context, vpcPeeringInstan
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/deleteVpcPeeringInstance")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/deleteVpcPeeringInstance")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -268,7 +277,7 @@ func (client PeeringClient) DeletePreparer(ctx context.Context, vpcPeeringInstan
 		autorest.WithPath("/deleteVpcPeeringInstance"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -336,8 +345,8 @@ func (client PeeringClient) GetDetailPreparer(ctx context.Context, vpcPeeringIns
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("GET", autorest.GetPath(DefaultBaseURI, "/getVpcPeeringInstanceDetail")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("GET", common.GetPath(DefaultBaseURI, "/getVpcPeeringInstanceDetail")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -348,7 +357,7 @@ func (client PeeringClient) GetDetailPreparer(ctx context.Context, vpcPeeringIns
 		autorest.WithPath("/getVpcPeeringInstanceDetail"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -451,8 +460,8 @@ func (client PeeringClient) GetListPreparer(ctx context.Context, vpcPeeringInsta
 	}
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("GET", autorest.GetPath(DefaultBaseURI, "/getVpcPeeringInstanceList")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("GET", common.GetPath(DefaultBaseURI, "/getVpcPeeringInstanceList")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -463,7 +472,7 @@ func (client PeeringClient) GetListPreparer(ctx context.Context, vpcPeeringInsta
 		autorest.WithPath("/getVpcPeeringInstanceList"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/tracing"
+	"github.com/samjegal/fincloud-sdk-for-go/common"
 	"github.com/samjegal/go-fincloud-helpers/security"
 	"net/http"
 	"strconv"
@@ -24,10 +25,18 @@ func NewNatGatewayClient() NatGatewayClient {
 	return NewNatGatewayClientWithBaseURI(DefaultBaseURI)
 }
 
+func NewNatGatewayClientWithKey(accessKey string, secretKey string) NatGatewayClient {
+	return NewNatGatewayClientWithBaseURIWithKey(DefaultBaseURI, accessKey, secretKey)
+}
+
 // NewNatGatewayClientWithBaseURI creates an instance of the NatGatewayClient client using a custom endpoint.  Use this
 // when interacting with an Azure cloud that uses a non-standard base URI (sovereign clouds, Azure stack).
 func NewNatGatewayClientWithBaseURI(baseURI string) NatGatewayClient {
 	return NatGatewayClient{NewWithBaseURI(baseURI)}
+}
+
+func NewNatGatewayClientWithBaseURIWithKey(baseURI string, accessKey string, secretKey string) NatGatewayClient {
+	return NatGatewayClient{NewWithBaseURIWithKey(baseURI, accessKey, secretKey)}
 }
 
 // Create NAT Gateway 인스턴스를 생성
@@ -86,8 +95,8 @@ func (client NatGatewayClient) CreatePreparer(ctx context.Context, vpcNo string,
 	}
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/createNatGatewayInstance")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/createNatGatewayInstance")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +107,7 @@ func (client NatGatewayClient) CreatePreparer(ctx context.Context, vpcNo string,
 		autorest.WithPath("/createNatGatewayInstance"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -166,8 +175,8 @@ func (client NatGatewayClient) DeletePreparer(ctx context.Context, natGatewayIns
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/deleteNatGatewayInstance")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/deleteNatGatewayInstance")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -178,7 +187,7 @@ func (client NatGatewayClient) DeletePreparer(ctx context.Context, natGatewayIns
 		autorest.WithPath("/deleteNatGatewayInstance"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -246,8 +255,8 @@ func (client NatGatewayClient) GetDetailPreparer(ctx context.Context, natGateway
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("GET", autorest.GetPath(DefaultBaseURI, "/getNatGatewayInstanceDetail")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("GET", common.GetPath(DefaultBaseURI, "/getNatGatewayInstanceDetail")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +267,7 @@ func (client NatGatewayClient) GetDetailPreparer(ctx context.Context, natGateway
 		autorest.WithPath("/getNatGatewayInstanceDetail"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -353,8 +362,8 @@ func (client NatGatewayClient) GetListPreparer(ctx context.Context, natGatewayIn
 	}
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("GET", autorest.GetPath(DefaultBaseURI, "/getNatGatewayInstanceList")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("GET", common.GetPath(DefaultBaseURI, "/getNatGatewayInstanceList")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -365,7 +374,7 @@ func (client NatGatewayClient) GetListPreparer(ctx context.Context, natGatewayIn
 		autorest.WithPath("/getNatGatewayInstanceList"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/tracing"
+	"github.com/samjegal/fincloud-sdk-for-go/common"
 	"github.com/samjegal/go-fincloud-helpers/security"
 	"net/http"
 	"strconv"
@@ -24,11 +25,19 @@ func NewRouteTableSubnetClient() RouteTableSubnetClient {
 	return NewRouteTableSubnetClientWithBaseURI(DefaultBaseURI)
 }
 
+func NewRouteTableSubnetClientWithKey(accessKey string, secretKey string) RouteTableSubnetClient {
+	return NewRouteTableSubnetClientWithBaseURIWithKey(DefaultBaseURI, accessKey, secretKey)
+}
+
 // NewRouteTableSubnetClientWithBaseURI creates an instance of the RouteTableSubnetClient client using a custom
 // endpoint.  Use this when interacting with an Azure cloud that uses a non-standard base URI (sovereign clouds, Azure
 // stack).
 func NewRouteTableSubnetClientWithBaseURI(baseURI string) RouteTableSubnetClient {
 	return RouteTableSubnetClient{NewWithBaseURI(baseURI)}
+}
+
+func NewRouteTableSubnetClientWithBaseURIWithKey(baseURI string, accessKey string, secretKey string) RouteTableSubnetClient {
+	return RouteTableSubnetClient{NewWithBaseURIWithKey(baseURI, accessKey, secretKey)}
 }
 
 // Add 라우트 테이블의 연관 서브넷을 추가
@@ -80,8 +89,8 @@ func (client RouteTableSubnetClient) AddPreparer(ctx context.Context, vpcNo stri
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/addRouteTableSubnet")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/addRouteTableSubnet")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +101,7 @@ func (client RouteTableSubnetClient) AddPreparer(ctx context.Context, vpcNo stri
 		autorest.WithPath("/addRouteTableSubnet"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -160,8 +169,8 @@ func (client RouteTableSubnetClient) GetListPreparer(ctx context.Context, routeT
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("GET", autorest.GetPath(DefaultBaseURI, "/getRouteTableSubnetList")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("GET", common.GetPath(DefaultBaseURI, "/getRouteTableSubnetList")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +181,7 @@ func (client RouteTableSubnetClient) GetListPreparer(ctx context.Context, routeT
 		autorest.WithPath("/getRouteTableSubnetList"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -244,8 +253,8 @@ func (client RouteTableSubnetClient) RemovePreparer(ctx context.Context, vpcNo s
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/removeRouteTableSubnet")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/removeRouteTableSubnet")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +265,7 @@ func (client RouteTableSubnetClient) RemovePreparer(ctx context.Context, vpcNo s
 		autorest.WithPath("/removeRouteTableSubnet"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }

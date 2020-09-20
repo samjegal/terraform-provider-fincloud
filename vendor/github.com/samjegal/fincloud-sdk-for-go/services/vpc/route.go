@@ -8,6 +8,7 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/tracing"
+	"github.com/samjegal/fincloud-sdk-for-go/common"
 	"github.com/samjegal/go-fincloud-helpers/security"
 	"net/http"
 	"strconv"
@@ -24,10 +25,18 @@ func NewRouteClient() RouteClient {
 	return NewRouteClientWithBaseURI(DefaultBaseURI)
 }
 
+func NewRouteClientWithKey(accessKey string, secretKey string) RouteClient {
+	return NewRouteClientWithBaseURIWithKey(DefaultBaseURI, accessKey, secretKey)
+}
+
 // NewRouteClientWithBaseURI creates an instance of the RouteClient client using a custom endpoint.  Use this when
 // interacting with an Azure cloud that uses a non-standard base URI (sovereign clouds, Azure stack).
 func NewRouteClientWithBaseURI(baseURI string) RouteClient {
 	return RouteClient{NewWithBaseURI(baseURI)}
+}
+
+func NewRouteClientWithBaseURIWithKey(baseURI string, accessKey string, secretKey string) RouteClient {
+	return RouteClient{NewWithBaseURIWithKey(baseURI, accessKey, secretKey)}
 }
 
 // Add 라우트를 추가
@@ -85,8 +94,8 @@ func (client RouteClient) AddPreparer(ctx context.Context, vpcNo string, routeTa
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/addRoute")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/addRoute")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +106,7 @@ func (client RouteClient) AddPreparer(ctx context.Context, vpcNo string, routeTa
 		autorest.WithPath("/addRoute"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -167,8 +176,8 @@ func (client RouteClient) GetListPreparer(ctx context.Context, routeTableNo stri
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("GET", autorest.GetPath(DefaultBaseURI, "/getRouteList")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("GET", common.GetPath(DefaultBaseURI, "/getRouteList")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +188,7 @@ func (client RouteClient) GetListPreparer(ctx context.Context, routeTableNo stri
 		autorest.WithPath("/getRouteList"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
@@ -257,8 +266,8 @@ func (client RouteClient) RemovePreparer(ctx context.Context, vpcNo string, rout
 	queryParameters["regionCode"] = autorest.Encode("query", "FKR")
 
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/int64(time.Millisecond), 10)
-	sec := security.NewSignature(client.Client.Secretkey, crypto.SHA256)
-	signature, err := sec.Signature("POST", autorest.GetPath(DefaultBaseURI, "/removeRoute")+"?"+autorest.GetQuery(queryParameters), client.Client.AccessKey, timestamp)
+	sec := security.NewSignature(client.Secretkey, crypto.SHA256)
+	signature, err := sec.Signature("POST", common.GetPath(DefaultBaseURI, "/removeRoute")+"?"+common.GetQuery(queryParameters), client.AccessKey, timestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -269,7 +278,7 @@ func (client RouteClient) RemovePreparer(ctx context.Context, vpcNo string, rout
 		autorest.WithPath("/removeRoute"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("x-ncp-apigw-timestamp", timestamp),
-		autorest.WithHeader("x-ncp-iam-access-key", client.Client.AccessKey),
+		autorest.WithHeader("x-ncp-iam-access-key", client.AccessKey),
 		autorest.WithHeader("x-ncp-apigw-signature-v2", signature))
 	return preparer.Prepare((&http.Request{}).WithContext(ctx))
 }
